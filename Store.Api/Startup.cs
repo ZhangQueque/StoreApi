@@ -13,7 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Store.Data;
- 
+using Store.Service;
+
 namespace Store.Api
 {
     public class Startup
@@ -37,6 +38,9 @@ namespace Store.Api
                 var xmlPath = Path.Combine(basePath, "Store.Api.xml");
                 option.IncludeXmlComments(xmlPath);
             });
+
+            //单例没办法注册DB上下文
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,12 +9,6 @@
             测试控制器
             </summary>
         </member>
-        <member name="M:Store.Api.Controllers.TestController.#ctor(Store.Data.StoreDbContext)">
-            <summary>
-            构造函数
-            </summary>
-            <param name="context"></param>
-        </member>
         <member name="M:Store.Api.Controllers.TestController.Get">
             <summary>
             测试数据
