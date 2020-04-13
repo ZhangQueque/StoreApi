@@ -4,6 +4,18 @@
         <name>Store.Api</name>
     </assembly>
     <members>
+        <member name="T:Store.Api.Controllers.ProductCategoriesController">
+            <summary>
+            商品类别API
+            </summary>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductCategoriesController.GetTree(System.Int32)">
+            <summary>
+            获取商品类别树结构列表
+            </summary>
+            <param name="id">商品类别id</param>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.TestController">
             <summary>
             测试控制器

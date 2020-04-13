@@ -8,6 +8,9 @@ using Store.Dto;
 
 namespace Store.Service.Product_Categories
 {
+    /// <summary>
+    /// 商品类别仓储接口
+    /// </summary>
     public interface IProduct_CategoryRepository:IRepositoryBaseT<Product_Category>,IRepositoryBaseTId<Product_Category,int>
     {
         /// <summary>
@@ -17,6 +20,11 @@ namespace Store.Service.Product_Categories
         /// <returns></returns>
         Task<bool> IsExistProducts(int id);
 
+        /// <summary>
+        /// 返回树结构列表
+        /// </summary>
+        /// <param name="pId"></param>
+        /// <returns></returns>
         Task<IEnumerable<Product_CategoryDto>> GetTreeProduct_CategoryDtoes(int pId);
     }
 }

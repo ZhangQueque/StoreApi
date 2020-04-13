@@ -11,6 +11,9 @@ using Store.Dto;
 
 namespace Store.Service.Product_Categories
 {
+    /// <summary>
+    /// 商品类别仓储类
+    /// </summary>
     public class Product_CategoryRepository : RepositoryBase<Product_Category, int>, IProduct_CategoryRepository
     {
         private readonly DbContext context;

@@ -9,6 +9,9 @@ using Store.Data.Repository;
 using System.Linq;
 namespace Store.Service.Products
 {
+    /// <summary>
+    /// 商品仓储类
+    /// </summary>
     public class ProductRepository: RepositoryBase<Product,int>,IProductRepository
     {
         private readonly DbContext context;
@@ -16,6 +19,11 @@ namespace Store.Service.Products
         public ProductRepository(DbContext context):base(context)
         {
             this.context = context;
+        }
+
+        public Task<IEnumerable<Product>> GetNewProducts()
+        {
+            return Task.FromResult( context.Set<Product>().OrderByDescending(m=>m.CreateTime).Take(8).AsEnumerable());
         }
 
         public async  Task<PageList<Product>> GetPageListsAsync(PageParameters pageParameters, int typeId)
@@ -75,6 +83,16 @@ namespace Store.Service.Products
 
             }//日期排序         
             return await PageList<Product>.CreateLayuiList(source,pageParameters.PageIndex,pageParameters.PageSize); ;
+        }
+
+        public Task<IEnumerable<Product>> GetPageViewTopProducts()
+        {
+            return Task.FromResult(context.Set<Product>().OrderByDescending(m =>m.PageView).Take(8).AsEnumerable());
+        }
+
+        public Task<IEnumerable<Product>> GetShopTopProducts()
+        {
+            return Task.FromResult(context.Set<Product>().OrderByDescending(m => m.Purchase).Take(8).AsEnumerable());
         }
     }
 }
