@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace Store.Api
 {
@@ -21,6 +22,13 @@ namespace Store.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .ConfigureLogging(logging => //≈‰÷√Nlog
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+                logging.SetMinimumLevel( LogLevel.Trace);
+                
+            }).UseNLog();
     }
 }

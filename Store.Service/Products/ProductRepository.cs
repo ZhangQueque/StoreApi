@@ -73,9 +73,8 @@ namespace Store.Service.Products
                     source = source.OrderByDescending<Product, DateTime>(m => m.CreateTime);
                 }
 
-            }//日期排序
-
-            return await PageList<Product>.CreateLayuiList(source.ToList(),pageParameters.PageIndex,pageParameters.PageSize); ;
+            }//日期排序         
+            return await PageList<Product>.CreateLayuiList(source,pageParameters.PageIndex,pageParameters.PageSize); ;
         }
     }
 }

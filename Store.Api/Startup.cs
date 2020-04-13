@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Store.Api.Filter;
 using Store.Data;
 using Store.Service;
 
@@ -29,7 +30,7 @@ namespace Store.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options=>options.Filters.Add<NlogFilter>());
             services.AddDbContext<StoreDbContext>(options=>options.UseMySql(Configuration["MySql"]));
             services.AddCors(options=>options.AddPolicy("cors",handler=>handler.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddSwaggerGen(option=> { option.SwaggerDoc("product", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Product Api", Version = "1" });
@@ -38,7 +39,7 @@ namespace Store.Api
                 var xmlPath = Path.Combine(basePath, "Store.Api.xml");
                 option.IncludeXmlComments(xmlPath);
             });
-
+            
             //单例没办法注册DB上下文
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
@@ -59,7 +60,7 @@ namespace Store.Api
             app.UseSwagger();
             app.UseSwaggerUI(options=>options.SwaggerEndpoint("/swagger/product/swagger.json", "Product Api"));
             app.UseAuthorization();
-
+         
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

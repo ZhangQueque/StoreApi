@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Store.Core.Pages;
 using Store.Data;
 using Store.Service;
@@ -20,11 +21,13 @@ namespace Store.Api.Controllers
     {
         private readonly StoreDbContext context;
         private readonly IRepositoryWrapper repositoryWrapper;
+        private readonly ILogger<TestController> logger;
 
-        public TestController(StoreDbContext context, IRepositoryWrapper repositoryWrapper)
+        public TestController(StoreDbContext context, IRepositoryWrapper repositoryWrapper,ILogger<TestController> logger)
         {
             this.context = context;
             this.repositoryWrapper = repositoryWrapper;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -36,7 +39,7 @@ namespace Store.Api.Controllers
         {
             PageParameters pageParameters = new PageParameters() { };
             var a = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, 5);
-             
+            
             return Ok((await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters,5)));
         }
     }

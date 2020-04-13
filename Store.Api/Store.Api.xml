@@ -15,5 +15,10 @@
             </summary>
             <returns>测试数据</returns>
         </member>
+        <member name="T:Store.Api.Filter.ErrorClass">
+            <summary>
+            错误信息
+            </summary>
+        </member>
     </members>
 </doc>
