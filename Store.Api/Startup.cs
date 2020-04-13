@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Store.Api.Attributes;
 using Store.Api.Filter;
 using Store.Data;
 using Store.Service;
@@ -39,9 +40,16 @@ namespace Store.Api
                 var xmlPath = Path.Combine(basePath, "Store.Api.xml");
                 option.IncludeXmlComments(xmlPath);
             });
+            services.AddDistributedRedisCache(options=> {
+                options.InstanceName = "cache_";
+                options.Configuration = Configuration["Redis"];
+            });
             
             //单例没办法注册DB上下文
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IsExistProductAttribute>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

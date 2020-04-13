@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Store.Api.Attributes;
 using Store.Core.Pages;
 using Store.Data;
 using Store.Service;
-
+using Microsoft.Extensions.Caching.Distributed;
 namespace Store.Api.Controllers
 {
   
@@ -22,21 +23,26 @@ namespace Store.Api.Controllers
         private readonly StoreDbContext context;
         private readonly IRepositoryWrapper repositoryWrapper;
         private readonly ILogger<TestController> logger;
+        private readonly IDistributedCache distributedCache;
 
-        public TestController(StoreDbContext context, IRepositoryWrapper repositoryWrapper,ILogger<TestController> logger)
+        public TestController(StoreDbContext context, IRepositoryWrapper repositoryWrapper,ILogger<TestController> logger,IDistributedCache distributedCache)
         {
             this.context = context;
             this.repositoryWrapper = repositoryWrapper;
             this.logger = logger;
+            this.distributedCache = distributedCache;
         }
 
         /// <summary>
         /// 测试数据
         /// </summary>
         /// <returns>测试数据</returns>
-        [HttpGet]
+        [HttpGet]//[HttpGet("{id}")]
+                 // [ServiceFilter(typeof(IsExistProductAttribute))]
         public async Task< IActionResult> Get()
         {
+            distributedCache.SetString("name","你好啊");
+            var name = distributedCache.GetString("name");
             PageParameters pageParameters = new PageParameters() { };
             var a = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, 5);
             
