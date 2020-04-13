@@ -41,6 +41,9 @@ namespace Store.Api.Controllers
                  // [ServiceFilter(typeof(IsExistProductAttribute))]
         public async Task< IActionResult> Get()
         {
+            var list =await repositoryWrapper.Product_CategoryRepository.GetAllAsync();
+            var list2 = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoes(1);
+
             distributedCache.SetString("name","你好啊");
             var name = distributedCache.GetString("name");
             PageParameters pageParameters = new PageParameters() { };

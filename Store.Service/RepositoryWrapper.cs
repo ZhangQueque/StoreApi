@@ -1,4 +1,5 @@
 ﻿using Store.Data;
+using Store.Service.Product_Categories;
 using Store.Service.Products;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,7 @@ namespace Store.Service
             this.context = context;
         }
         public IProductRepository ProductRepository => new ProductRepository(context);
+
+        public IProduct_CategoryRepository Product_CategoryRepository => new Product_CategoryRepository(context);
     }
 }
