@@ -33,16 +33,16 @@ namespace Store.Api.Controllers
         /// <param name="id">商品类别id</param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Product_CategoryDto>>> GetTree(int id)
+        public async Task<ActionResult<IEnumerable<Product_CategoryDto>>> GetTreeAsync(int id)
         {
             byte[] bytes =await distributedCache.GetAsync($"Product_Category_{id}");
             IEnumerable<Product_CategoryDto> data = Enumerable.Empty<Product_CategoryDto>();
             if (bytes == null)
             {
-                data = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoes(id);
+                data = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoesAsync(id);
                 DistributedCacheEntryOptions options = new DistributedCacheEntryOptions()
                 {
-                     AbsoluteExpiration = DateTime.Now.AddDays(1)
+                    SlidingExpiration = TimeSpan.FromHours(3)
                 };
                 using (MemoryStream stream = new MemoryStream())
                 {

@@ -23,12 +23,12 @@ namespace Store.Service.Product_Categories
             this.context = context;
         }
 
-        public  Task<IEnumerable<Product_CategoryDto>> GetTreeProduct_CategoryDtoes(int pId)
+        public  async Task<IEnumerable<Product_CategoryDto>> GetTreeProduct_CategoryDtoesAsync(int pId)
         {
-            return Task.FromResult(BindTree(pId));
+            return  await BindTreeAsync(pId) ;
         }
 
-        private IEnumerable<Product_CategoryDto> BindTree(int pId)
+        private async Task< IEnumerable<Product_CategoryDto>> BindTreeAsync(int pId)
         {
             var list =  context.Set<Product_Category>().Where(m=>m.PId==pId).Select(m=> new Product_CategoryDto { 
                  Id=m.Id,
@@ -40,11 +40,11 @@ namespace Store.Service.Product_Categories
             }).ToList();
             foreach (var item in list)
             {
-                item.ChildList = BindTree(item.Id).ToList();
+                item.ChildList =(await BindTreeAsync(item.Id)).ToList();
             }
             return list;
         }
-        public async Task<bool> IsExistProducts(int id)
+        public async Task<bool> IsExistProductsAsync(int id)
         {
             var count =await context.Set<Product>().CountAsync(m => m.Product_CategoryId == id);
             return count > 0;

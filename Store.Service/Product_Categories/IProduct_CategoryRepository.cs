@@ -18,13 +18,13 @@ namespace Store.Service.Product_Categories
         /// </summary>
         /// <param name="id">商品id</param>
         /// <returns></returns>
-        Task<bool> IsExistProducts(int id);
+        Task<bool> IsExistProductsAsync(int id);
 
         /// <summary>
         /// 返回树结构列表
         /// </summary>
         /// <param name="pId"></param>
         /// <returns></returns>
-        Task<IEnumerable<Product_CategoryDto>> GetTreeProduct_CategoryDtoes(int pId);
+        Task<IEnumerable<Product_CategoryDto>> GetTreeProduct_CategoryDtoesAsync(int pId);
     }
 }

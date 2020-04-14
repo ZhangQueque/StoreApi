@@ -21,7 +21,7 @@ namespace Store.Service.Products
             this.context = context;
         }
 
-        public Task<IEnumerable<Product>> GetNewProducts()
+        public Task<IEnumerable<Product>> GetNewProductsAsync()
         {
             return Task.FromResult( context.Set<Product>().OrderByDescending(m=>m.CreateTime).Take(8).AsEnumerable());
         }
@@ -85,12 +85,12 @@ namespace Store.Service.Products
             return await PageList<Product>.CreateLayuiList(source,pageParameters.PageIndex,pageParameters.PageSize); ;
         }
 
-        public Task<IEnumerable<Product>> GetPageViewTopProducts()
+        public Task<IEnumerable<Product>> GetPageViewTopProductsAsync()
         {
             return Task.FromResult(context.Set<Product>().OrderByDescending(m =>m.PageView).Take(8).AsEnumerable());
         }
 
-        public Task<IEnumerable<Product>> GetShopTopProducts()
+        public Task<IEnumerable<Product>> GetShopTopProductsAsync()
         {
             return Task.FromResult(context.Set<Product>().OrderByDescending(m => m.Purchase).Take(8).AsEnumerable());
         }

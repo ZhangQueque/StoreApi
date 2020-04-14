@@ -18,18 +18,18 @@ namespace Store.Service.Products
         /// 最新商品
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Product>> GetNewProducts();
+        Task<IEnumerable<Product>> GetNewProductsAsync();
 
         /// <summary>
         /// 销量最高
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Product>> GetShopTopProducts();
+        Task<IEnumerable<Product>> GetShopTopProductsAsync();
 
         /// <summary>
-        /// 随机商品
+        /// 推荐商品
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Product>> GetPageViewTopProducts();
+        Task<IEnumerable<Product>> GetPageViewTopProductsAsync();
     }
 }

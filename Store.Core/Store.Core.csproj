@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="2.4.6" />
+  </ItemGroup>
+
 </Project>

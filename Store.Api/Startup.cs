@@ -16,6 +16,8 @@ using Store.Api.Attributes;
 using Store.Api.Filter;
 using Store.Data;
 using Store.Service;
+using AutoMapper;
+using Store.Api.RedisCache;
 
 namespace Store.Api
 {
@@ -44,10 +46,12 @@ namespace Store.Api
                 options.InstanceName = "cache_";
                 options.Configuration = Configuration["Redis"];
             });
+            services.AddAutoMapper(typeof(Startup)); 
             
             //单例没办法注册DB上下文
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped<IsExistProductAttribute>();
+            services.AddScoped<RedisCacheHelper>();
 
 
         }
