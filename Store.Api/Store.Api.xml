@@ -20,7 +20,7 @@
             <summary>
             商品信息列表
             </summary>
-            <param name="id">商品类别</param>
+            <param name="typeId">商品类别</param>
             <param name="pageParameters">查询参数</param>
             <returns></returns>
         </member>

@@ -28,7 +28,12 @@ namespace Store.Service.Products
 
         public async  Task<PageList<Product>> GetPageListsAsync(PageParameters pageParameters, int typeId)
         {
-            IQueryable<Product> source = context.Set<Product>().Where(m=>m.Product_CategoryId==typeId);
+            IQueryable<Product> source = context.Set<Product>().Where(m => m.Product_CategoryId == typeId);
+            if (typeId==0)
+            {
+                source = context.Set<Product>();
+            }
+          
             if (!string.IsNullOrEmpty(pageParameters.Name))
             {
                 source = source.Where(m=>m.Title.Contains(pageParameters.Name));

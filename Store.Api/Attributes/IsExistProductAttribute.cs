@@ -20,12 +20,15 @@ namespace Store.Api.Attributes
         {
            
             var typeId= context.ActionArguments["id"];
-           
-            if (!await repositoryWrapper.Product_CategoryRepository.IsExistProductsAsync((int)typeId))
+            if ((int)typeId!=0)
             {
-                context.Result =new NotFoundResult();
-                
+                if (!await repositoryWrapper.Product_CategoryRepository.IsExistProductsAsync((int)typeId))
+                {
+                    context.Result = new NotFoundResult();
+
+                }
             }
+            
             await  base.OnActionExecutionAsync(context, next);
         }
      
