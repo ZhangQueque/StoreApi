@@ -2,15 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Store.Service;
+
 namespace Store.Api.Attributes
 {
     public class IsExistProductAttribute : ActionFilterAttribute
     {
-        public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        private readonly IRepositoryWrapper repositoryWrapper;
+
+        public IsExistProductAttribute(IRepositoryWrapper repositoryWrapper)
         {
-            var typeId= context.ActionArguments["id"].ToString();
-            return base.OnActionExecutionAsync(context, next);
+            this.repositoryWrapper = repositoryWrapper;
+        }
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+           
+            var typeId= context.ActionArguments["id"];
+           
+            if (!await repositoryWrapper.Product_CategoryRepository.IsExistProductsAsync((int)typeId))
+            {
+                context.Result =new NotFoundResult();
+                
+            }
+            await  base.OnActionExecutionAsync(context, next);
         }
      
     }

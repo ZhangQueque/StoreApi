@@ -12,11 +12,11 @@ using Store.Service;
 using Microsoft.Extensions.Caching.Distributed;
 namespace Store.Api.Controllers
 {
-  
+
     /// <summary>
     /// 测试控制器
     /// </summary>
-    [Route("api/test")]
+    [Route("api/test/{id}")]
     [ApiController]
     public class TestController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace Store.Api.Controllers
         private readonly ILogger<TestController> logger;
         private readonly IDistributedCache distributedCache;
 
-        public TestController(StoreDbContext context, IRepositoryWrapper repositoryWrapper,ILogger<TestController> logger,IDistributedCache distributedCache)
+        public TestController(StoreDbContext context, IRepositoryWrapper repositoryWrapper, ILogger<TestController> logger, IDistributedCache distributedCache)
         {
             this.context = context;
             this.repositoryWrapper = repositoryWrapper;
@@ -39,7 +39,8 @@ namespace Store.Api.Controllers
         /// <returns>测试数据</returns>
         [HttpGet]//[HttpGet("{id}")]
                  // [ServiceFilter(typeof(IsExistProductAttribute))]
-        public async Task< IActionResult> Get()
+        [ServiceFilter(typeof(IsExistProductAttribute))]
+        public async Task<IActionResult> Get(int id)
         {
             //var list =await repositoryWrapper.Product_CategoryRepository.GetAllAsync();
             //var list2 = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoes(1);
@@ -50,7 +51,7 @@ namespace Store.Api.Controllers
             //var a = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, 5);
 
             // return Ok((await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters,5)));
-
+           
             return Ok();
         }
     }
