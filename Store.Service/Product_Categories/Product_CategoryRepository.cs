@@ -41,6 +41,34 @@ namespace Store.Service.Product_Categories
             foreach (var item in list)
             {
                 item.ChildList =(await BindTreeAsync(item.Id)).ToList();
+                if (item.Id==1)
+                {
+                    item.ProductList = context.Set<Product>().Where(m=>m.Product_CategoryId==9).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
+                if (item.Id == 2)
+                {
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 14).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
+                if (item.Id == 3)
+                {
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 18).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
+                if (item.Id == 4)
+                {
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 21).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
+                if (item.Id == 30)
+                {
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == item.Id).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
+                if (item.Id == 31)
+                {
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == item.Id).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
+                if (item.Id == 32)
+                {
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == item.Id).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                }
             }
             return list;
         }

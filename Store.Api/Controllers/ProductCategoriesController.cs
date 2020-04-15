@@ -9,6 +9,8 @@ using Store.Dto;
 using Store.Service;
 using ProtoBuf;
 using System.IO;
+using Store.Api.RedisCache;
+
 namespace Store.Api.Controllers
 {
     /// <summary>
@@ -20,11 +22,13 @@ namespace Store.Api.Controllers
     {
         private readonly IRepositoryWrapper repositoryWrapper;
         private readonly IDistributedCache distributedCache;
+        private readonly RedisCacheHelper cacheHelper;
 
-        public ProductCategoriesController(IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache)
+        public ProductCategoriesController(IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache,RedisCacheHelper cacheHelper)
         {
             this.repositoryWrapper = repositoryWrapper;
             this.distributedCache = distributedCache;
+            this.cacheHelper = cacheHelper;
         }
 
         /// <summary>
@@ -40,23 +44,25 @@ namespace Store.Api.Controllers
             if (bytes == null)
             {
                 data = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoesAsync(id);
-                DistributedCacheEntryOptions options = new DistributedCacheEntryOptions()
-                {
-                    SlidingExpiration = TimeSpan.FromHours(3)
-                };
-                using (MemoryStream stream = new MemoryStream())
-                {
-                      Serializer.Serialize(stream, data);
-                      await distributedCache.SetAsync($"Product_Category_{id}", stream.ToArray(), options);
-                }
+                await cacheHelper.SetRedisCacheAsync($"Product_Category_{id}",data);
+                //DistributedCacheEntryOptions options = new DistributedCacheEntryOptions()
+                //{
+                //    SlidingExpiration = TimeSpan.FromHours(3)
+                //};
+                //using (MemoryStream stream = new MemoryStream())
+                //{
+                //      Serializer.Serialize(stream, data);
+                //      await distributedCache.SetAsync($"Product_Category_{id}", stream.ToArray(), options);
+                //}
                 return data.ToList();
             }
-            using (MemoryStream stream = new MemoryStream(bytes))
-            {
+            //using (MemoryStream stream = new MemoryStream(bytes))
+            //{
 
-                 data= Serializer.Deserialize<IEnumerable<Product_CategoryDto>>(stream);
-                
-            }
+            //     data= Serializer.Deserialize<IEnumerable<Product_CategoryDto>>(stream);
+
+            //}
+            data = await cacheHelper.GetRedisCacheAsync<IEnumerable<Product_CategoryDto>>(bytes);
             return data.ToList();
         }
     }

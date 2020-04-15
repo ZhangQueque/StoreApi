@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ProtoBuf;
+using Store.Data.Entities;
 
 namespace Store.Dto
 {
@@ -27,6 +28,8 @@ namespace Store.Dto
 
         [ProtoMember(7)]
         public List<Product_CategoryDto> ChildList { get; set; } = new List<Product_CategoryDto>();
-     
+        [ProtoMember(8)]
+        public List<Product> ProductList { get; set; } = new List<Product>();
+
     }
 }
