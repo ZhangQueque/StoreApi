@@ -54,11 +54,11 @@ namespace Store.Api.Controllers
                 //价格排序缓冲
                 if (pageParameters.IsPriceSort!=null)
                 {
-                    byte[] pricebytes = await distributedCache.GetAsync($"Product_Price_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}");
+                    byte[] pricebytes = await distributedCache.GetAsync($"Product_Price_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsPriceSort}");
                     if (pricebytes == null)
                     {
                         data = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, typeId);
-                        await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Price_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}", data);
+                        await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Price_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsPriceSort}", data);
                         return data;
                     }
                     else
@@ -71,11 +71,11 @@ namespace Store.Api.Controllers
                 //购买量查询
                 if (pageParameters.IsPurchaseSort != null)
                 {
-                    byte[] purchasebytes = await distributedCache.GetAsync($"Product_Purchase_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}");
+                    byte[] purchasebytes = await distributedCache.GetAsync($"Product_Purchase_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsPurchaseSort}");
                     if (purchasebytes == null)
                     {
                         data = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, typeId);
-                        await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Purchase_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}", data);
+                        await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Purchase_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsPurchaseSort}", data);
                         return data;
                     }
                     else
@@ -88,11 +88,11 @@ namespace Store.Api.Controllers
                 //时间查询
                 if (pageParameters.IsTimeSort != null)
                 {
-                    byte[] timebytes = await distributedCache.GetAsync($"Product_Time_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}");
+                    byte[] timebytes = await distributedCache.GetAsync($"Product_Time_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsTimeSort}");
                     if (timebytes == null)
                     {
                         data = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, typeId);
-                        await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Time_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}", data);
+                        await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Time_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsTimeSort}", data);
                         return data;
                     }
                     else
