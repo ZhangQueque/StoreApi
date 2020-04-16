@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -17,10 +18,13 @@ namespace Store.Api
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            IConfiguration configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("url.json").Build();
+
+          return  Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
-                {
+                {//.UseUrls(configuration["url"])
                     webBuilder.UseStartup<Startup>();
                 })
             .ConfigureLogging(logging => //≈‰÷√Nlog
@@ -30,5 +34,6 @@ namespace Store.Api
                 logging.SetMinimumLevel( LogLevel.Trace);
                 
             }).UseNLog();
+        }
     }
 }
