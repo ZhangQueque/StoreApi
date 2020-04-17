@@ -10,6 +10,7 @@ using Store.Service;
 using ProtoBuf;
 using System.IO;
 using Store.Api.RedisCache;
+using Store.Api.Attributes;
 
 namespace Store.Api.Controllers
 {
@@ -37,6 +38,7 @@ namespace Store.Api.Controllers
         /// <param name="id">商品类别id</param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        
         public async Task<ActionResult<IEnumerable<Product_CategoryDto>>> GetTreeAsync(int id)
         {
             byte[] bytes =await distributedCache.GetAsync($"Product_Category_{id}");

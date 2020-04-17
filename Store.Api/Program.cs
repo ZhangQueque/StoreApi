@@ -25,7 +25,7 @@ namespace Store.Api
           return  Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {//.UseUrls(configuration["url"])
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder .UseStartup<Startup>();
                 })
             .ConfigureLogging(logging => //≈‰÷√Nlog
             {

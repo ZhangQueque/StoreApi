@@ -16,11 +16,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
 using Store.Api.RedisCache;
+using Store.Api.Attributes;
 
 namespace Store.Api.Controllers
 {
     [Route("api/{typeId}/products")]
     [ApiController]
+    [ServiceFilter(typeof(IsExistProductAttribute))]
     public class ProductsController : ControllerBase
     {
         private readonly IRepositoryWrapper repositoryWrapper;

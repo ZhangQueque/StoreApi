@@ -19,7 +19,8 @@ namespace Store.Api.Attributes
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
            
-            var typeId= context.ActionArguments["id"];
+            var typeId= context.ActionArguments["typeId"];
+            
             if ((int)typeId!=0)
             {
                 if (!await repositoryWrapper.Product_CategoryRepository.IsExistProductsAsync((int)typeId))
