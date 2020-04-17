@@ -22,6 +22,13 @@
             </summary>
             <param name="typeId">商品类别</param>
             <param name="pageParameters">查询参数</param>
+            <returns></returns>     
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.GetProductById(System.Int32)">
+            <summary>
+            获取单个商品信息（及时加载）
+            </summary>
+            <param name="id">商品主键</param>
             <returns></returns>
         </member>
         <member name="M:Store.Api.Controllers.ProductsController.GetNewProductsAsync">

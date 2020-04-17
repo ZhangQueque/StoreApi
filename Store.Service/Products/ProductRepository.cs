@@ -95,6 +95,15 @@ namespace Store.Service.Products
             return Task.FromResult(context.Set<Product>().OrderByDescending(m =>m.PageView).Take(8).AsEnumerable());
         }
 
+        public async Task<Product> GetProductById(int id)
+        {
+            var product = await  context.Set<Product>().FindAsync(id);
+            context.Entry<Product>(product).Collection(m => m.Product_Describes).Load();
+            context.Entry<Product>(product).Collection(m => m.Product_Images).Load();
+            return product;
+
+        }
+
         public Task<IEnumerable<Product>> GetShopTopProductsAsync()
         {
             return Task.FromResult(context.Set<Product>().OrderByDescending(m => m.Purchase).Take(8).AsEnumerable());

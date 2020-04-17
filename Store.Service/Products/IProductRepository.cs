@@ -15,6 +15,13 @@ namespace Store.Service.Products
         Task<PageList<Product>> GetPageListsAsync(PageParameters pageParameters, int typeId);
 
         /// <summary>
+        /// 根据主键获取商品
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        Task<Product> GetProductById(int id);
+
+        /// <summary>
         /// 最新商品
         /// </summary>
         /// <returns></returns>

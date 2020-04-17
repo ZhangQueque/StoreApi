@@ -22,7 +22,6 @@ namespace Store.Api.Controllers
 {
     [Route("api/{typeId}/products")]
     [ApiController]
-    [ServiceFilter(typeof(IsExistProductAttribute))]
     public class ProductsController : ControllerBase
     {
         private readonly IRepositoryWrapper repositoryWrapper;
@@ -43,8 +42,9 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <param name="typeId">商品类别</param>
         /// <param name="pageParameters">查询参数</param>
-        /// <returns></returns>
+        /// <returns></returns>     
         [HttpGet]
+        [ServiceFilter(typeof(IsExistProductAttribute))]
         public async Task<ActionResult<PageList<Product>>> GetProductsAsync(int typeId, [FromQuery]PageParameters pageParameters)
         {
            
@@ -183,6 +183,27 @@ namespace Store.Api.Controllers
                 data = await cacheHelper.GetRedisCacheAsync<PageList<Product>>(noParameterbytes);
                 return data;
             }
+        }
+
+
+        /// <summary>
+        /// 获取单个商品信息（及时加载）
+        /// </summary>
+        /// <param name="id">商品主键</param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<Product> GetProductById(int id)
+        {
+            Product product;
+            byte[] bytes = distributedCache.Get($"Product_{id}");
+            if (bytes==null)
+            {
+                product = await repositoryWrapper.ProductRepository.GetProductById(id);
+                await cacheHelper.SetRedisCacheAsync($"Product_{id}", product);
+                return product;
+            }
+            product = await cacheHelper.GetRedisCacheAsync<Product>(bytes);
+            return product;
         }
 
 
