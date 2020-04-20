@@ -8,8 +8,9 @@ namespace Store.Dto
     public class User_PhoneLoginDto
     {
         [Required]
+        [Phone]
         public string Phone { get; set; }
-        [Required]
+       
         public string Code { get; set; }
     }
 }

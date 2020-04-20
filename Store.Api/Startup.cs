@@ -62,20 +62,28 @@ namespace Store.Api
             {
                 options.BaseAddress = new Uri("https://www.zhangqueque.top:5000/");
             });
-            var security = Configuration.GetSection("Security");
-            services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+            var security = Configuration.GetSection("Security:Token");
+         
+            services.AddAuthentication(options=> {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
+
                         ValidIssuer = security["Issuer"],
                         ValidAudience = security["Audience"],
                         ValidateLifetime = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(security["Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(security["Key"])),
+                        NameClaimType = JwtClaimTypes.Name
+                        
                     };
                 });
 
-            services.Configure<SecurityConfigOptions>(Configuration.GetSection("Security"));
+            services.Configure<SecurityConfigOptions>(Configuration.GetSection("Security:Token"));
             //单例没办法注册DB上下文
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped<IsExistProductAttribute>();
@@ -99,6 +107,7 @@ namespace Store.Api
             app.UseCors("cors");
             app.UseSwagger();
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/product/swagger.json", "Product Api"));
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

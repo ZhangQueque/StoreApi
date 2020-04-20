@@ -45,6 +45,7 @@ namespace Store.Api.Controllers
         /// <returns></returns>     
         [HttpGet]
         [ServiceFilter(typeof(IsExistProductAttribute))]
+       
         public async Task<ActionResult<PageList<Product>>> GetProductsAsync(int typeId, [FromQuery]PageParameters pageParameters)
         {
            

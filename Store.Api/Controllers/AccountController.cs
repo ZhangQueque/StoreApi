@@ -10,6 +10,15 @@ using Store.Core;
 using Store.Service;
 using AspNetCore.Http.Extensions;
 using Store.Dto;
+ 
+using Store.Api.Models;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityModel;
+using System.Text;
 
 namespace Store.Api.Controllers
 {
@@ -24,12 +33,14 @@ namespace Store.Api.Controllers
         private readonly HttpClient _httpClient;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IDistributedCache _distributedCache;
+        private readonly SecurityConfigOptions _securityConfigOptions;
 
-        public AccountController(IHttpClientFactory httpClientFactory,IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache)
+        public AccountController(IHttpClientFactory httpClientFactory,IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache,IOptions<SecurityConfigOptions> option)
         {
             this._httpClient= httpClientFactory.CreateClient("service");
             this._repositoryWrapper = repositoryWrapper;
             this._distributedCache = distributedCache;
+            this._securityConfigOptions = option.Value;
         }
 
         /// <summary>
@@ -66,19 +77,47 @@ namespace Store.Api.Controllers
                 {
                     return Ok("发送成功！");
                 }
+                else
+                {
+                    return Ok("服务器错误，请联系管理员！");
+                }
             }
             return Ok("请一分钟后尝试！");
         }
 
+        /// <summary>
+        /// 邮箱登录
+        /// </summary>
+        /// <param name="login">登录对象</param>
+        /// <returns></returns>
         [HttpPost("email")]
         public async Task<IActionResult> EmailLoginAsync(User_EmailLoginDto login)
         {
-            var user = await _repositoryWrapper.UserRepository.EmailLoginAsync(login.Email,login.Password);
-            if (user==null)
+            var user = await _repositoryWrapper.UserRepository.EmailLoginAsync(login.Email, login.Password);
+            if (user == null)
             {
                 return NotFound();
             }
-            return Ok();
+
+            List<Claim> claimList = new List<Claim>
+            {           
+                new Claim(JwtClaimTypes.Name,user.Id.ToString()),
+                new Claim(JwtClaimTypes.NickName,user.NickName),
+                new Claim(JwtClaimTypes.Email,user.Email )    
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityConfigOptions.Key));
+
+            SigningCredentials sig = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var jwtToken = new JwtSecurityToken(
+                   issuer: _securityConfigOptions.Issuer,
+                   audience: _securityConfigOptions.Audience,
+                   claims: claimList,
+                   signingCredentials: sig,
+                   expires: DateTime.Now.AddMinutes(120)
+                 ); ;
+            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(jwtToken)}); ;
         }
     }
 }

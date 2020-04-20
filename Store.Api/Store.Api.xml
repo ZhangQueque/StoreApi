@@ -16,6 +16,13 @@
             <param name="phone">手机号</param>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.AccountController.EmailLoginAsync(Store.Dto.User_EmailLoginDto)">
+            <summary>
+            邮箱登录
+            </summary>
+            <param name="login">登录对象</param>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.ProductCategoriesController">
             <summary>
             商品类别API
@@ -66,7 +73,7 @@
             测试控制器
             </summary>
         </member>
-        <member name="M:Store.Api.Controllers.TestController.Get(System.Int32)">
+        <member name="M:Store.Api.Controllers.TestController.Get">
             <summary>
             测试数据
             </summary>
@@ -75,6 +82,11 @@
         <member name="T:Store.Api.Filter.ErrorClass">
             <summary>
             错误信息
+            </summary>
+        </member>
+        <member name="T:Store.Api.Models.SecurityConfigOptions">
+            <summary>
+            jwt 配置文件
             </summary>
         </member>
         <member name="T:Store.Api.RedisCache.RedisCacheHelper">

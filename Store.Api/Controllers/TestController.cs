@@ -10,13 +10,14 @@ using Store.Core.Pages;
 using Store.Data;
 using Store.Service;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.Authorization;
 namespace Store.Api.Controllers
 {
 
     /// <summary>
     /// 测试控制器
     /// </summary>
-    [Route("api/test/{id}")]
+    [Route("api/test")]
     [ApiController]
     public class TestController : ControllerBase
     {
@@ -39,8 +40,8 @@ namespace Store.Api.Controllers
         /// <returns>测试数据</returns>
         [HttpGet]//[HttpGet("{id}")]
                  // [ServiceFilter(typeof(IsExistProductAttribute))]
-        [ServiceFilter(typeof(IsExistProductAttribute))]
-        public async Task<IActionResult> Get(int id)
+       [Authorize]
+        public  IActionResult Get()
         {
             //var list =await repositoryWrapper.Product_CategoryRepository.GetAllAsync();
             //var list2 = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoes(1);
@@ -52,7 +53,7 @@ namespace Store.Api.Controllers
 
             // return Ok((await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters,5)));
            
-            return Ok();
+            return Ok(User.Identity.Name);
         }
     }
 }
