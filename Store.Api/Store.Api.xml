@@ -4,6 +4,18 @@
         <name>Store.Api</name>
     </assembly>
     <members>
+        <member name="T:Store.Api.Controllers.AccountController">
+            <summary>
+            账号控制器
+            </summary>
+        </member>
+        <member name="M:Store.Api.Controllers.AccountController.GetCode(System.String)">
+            <summary>
+            获取验证码
+            </summary>
+            <param name="phone">手机号</param>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.ProductCategoriesController">
             <summary>
             商品类别API

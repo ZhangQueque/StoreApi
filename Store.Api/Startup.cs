@@ -18,6 +18,13 @@ using Store.Data;
 using Store.Service;
 using AutoMapper;
 using Store.Api.RedisCache;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens;
+using IdentityModel;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Store.Api.Models;
 
 namespace Store.Api
 {
@@ -33,21 +40,42 @@ namespace Store.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options=>options.Filters.Add<NlogFilter>());
-            services.AddDbContext<StoreDbContext>(options=>options.UseMySql(Configuration["MySql"]));
-            services.AddCors(options=>options.AddPolicy("cors",handler=>handler.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-            services.AddSwaggerGen(option=> { option.SwaggerDoc("product", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Product Api", Version = "1" });
+            services.AddControllers(options => options.Filters.Add<NlogFilter>());
+            services.AddDbContext<StoreDbContext>(options => options.UseMySql(Configuration["MySql"]));
+            services.AddCors(options => options.AddPolicy("cors", handler => handler.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("product", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Product Api", Version = "1" });
                 //Store.Api.xml
                 var basePath = Directory.GetCurrentDirectory();//获取应用程序所在目录（绝对，不受工作目录影响，建议采用此方法获取路径）
                 var xmlPath = Path.Combine(basePath, "Store.Api.xml");
                 option.IncludeXmlComments(xmlPath);
             });
-            services.AddDistributedRedisCache(options=> {
+            services.AddDistributedRedisCache(options =>
+            {
                 options.InstanceName = "cache_";
                 options.Configuration = Configuration["Redis"];
             });
-            services.AddAutoMapper(typeof(Startup)); 
-            
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddHttpClient("service", options =>
+            {
+                options.BaseAddress = new Uri("https://www.zhangqueque.top:5000/");
+            });
+            var security = Configuration.GetSection("Security");
+            services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidIssuer = security["Issuer"],
+                        ValidAudience = security["Audience"],
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(security["Key"]))
+                    };
+                });
+
+            services.Configure<SecurityConfigOptions>(Configuration.GetSection("Security"));
             //单例没办法注册DB上下文
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped<IsExistProductAttribute>();
@@ -70,9 +98,9 @@ namespace Store.Api
 
             app.UseCors("cors");
             app.UseSwagger();
-            app.UseSwaggerUI(options=>options.SwaggerEndpoint("/swagger/product/swagger.json", "Product Api"));
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/product/swagger.json", "Product Api"));
             app.UseAuthorization();
-         
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

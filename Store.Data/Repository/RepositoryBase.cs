@@ -16,7 +16,7 @@ namespace Store.Data.Repository
     public class RepositoryBase<T, TId> : IRepositoryBaseT<T>, IRepositoryBaseTId<T, TId>
         where T:class
     {
-        private readonly DbContext context;
+        public readonly DbContext context;
 
         public RepositoryBase(DbContext context)
         {

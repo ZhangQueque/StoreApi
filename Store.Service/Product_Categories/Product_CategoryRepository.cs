@@ -16,16 +16,16 @@ namespace Store.Service.Product_Categories
     /// </summary>
     public class Product_CategoryRepository : RepositoryBase<Product_Category, int>, IProduct_CategoryRepository
     {
-        private readonly DbContext context;
+        
         private IEnumerable<Product_CategoryDto> data;
         public Product_CategoryRepository(DbContext context) : base(context)
         {
-            this.context = context;
+             
         }
 
         public  async Task<IEnumerable<Product_CategoryDto>> GetTreeProduct_CategoryDtoesAsync(int pId)
         {
-            data = context.Set<Product_Category>().Select(m => new Product_CategoryDto
+            data = context.Set<Product_Category>().Where(m=>m.Status.Equals(0)).Select(m => new Product_CategoryDto
             {
                 Id = m.Id,
                 Title = m.Title,
@@ -46,19 +46,19 @@ namespace Store.Service.Product_Categories
                 item.ChildList =(await BindTreeAsync(item.Id)).ToList();
                 if (item.Id==1)
                 {
-                    item.ProductList = context.Set<Product>().Where(m=>m.Product_CategoryId==9).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                    item.ProductList = context.Set<Product>().Where(m=>m.Product_CategoryId==9 && m.Status.Equals(0)).OrderByDescending(m => m.CreateTime).Take(2).ToList();
                 }
                 if (item.Id == 2)
                 {
-                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 14).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 14 && m.Status.Equals(0)).OrderByDescending(m => m.CreateTime).Take(2).ToList();
                 }
                 if (item.Id == 3)
                 {
-                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 18).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 18 && m.Status.Equals(0)).OrderByDescending(m => m.CreateTime).Take(2).ToList();
                 }
                 if (item.Id == 4)
                 {
-                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 21).OrderByDescending(m => m.CreateTime).Take(2).ToList();
+                    item.ProductList = context.Set<Product>().Where(m => m.Product_CategoryId == 21 && m.Status.Equals(0)).OrderByDescending(m => m.CreateTime).Take(2).ToList();
                 }       
             }
             return list;
