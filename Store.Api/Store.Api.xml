@@ -9,7 +9,7 @@
             账号控制器
             </summary>
         </member>
-        <member name="M:Store.Api.Controllers.AccountController.GetCode(System.String)">
+        <member name="M:Store.Api.Controllers.AccountController.GetCodeAsync(System.String)">
             <summary>
             获取验证码
             </summary>
@@ -21,6 +21,27 @@
             邮箱登录
             </summary>
             <param name="login">登录对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.AccountController.EmailRegisterAsync(Store.Dto.User_EmailLoginDto)">
+            <summary>
+            邮箱注册，返回token
+            </summary>
+            <param name="register">注册对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.AccountController.PhoneLoginAsync(Store.Dto.User_PhoneLoginDto)">
+            <summary>
+            手机号登录验证
+            </summary>
+            <param name="login">登录对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.AccountController.RetrievePasswordAsync(System.String)">
+            <summary>
+            找回密码
+            </summary>
+            <param name="email">邮箱</param>
             <returns></returns>
         </member>
         <member name="T:Store.Api.Controllers.ProductCategoriesController">

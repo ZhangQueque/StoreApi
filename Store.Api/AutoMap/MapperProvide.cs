@@ -8,11 +8,16 @@ using System.Threading.Tasks;
 
 namespace Store.Api.AutoMap
 {
-    public class MapperProvide:Profile
+    public class MapperProvide : Profile
     {
         public MapperProvide()
         {
             CreateMap<Product, ProductDto>();
+            CreateMap<UserInfo, User_EmailLoginDto>();
+            CreateMap<User_EmailLoginDto, UserInfo>();
+
+            CreateMap<UserInfo, User_PhoneLoginDto>();
+            CreateMap<User_PhoneLoginDto, UserInfo>();
         }
     }
 }

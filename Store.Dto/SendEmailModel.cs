@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace QueQue.SMS.Models
+namespace Store.Dto
 {
     /// <summary>
     /// 邮件发送帮助类
