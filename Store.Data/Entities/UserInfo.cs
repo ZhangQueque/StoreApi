@@ -28,5 +28,8 @@ namespace Store.Data.Entities
         public int CreateId { get; set; }
 
         public DateTime UpdateTime { get; set; }
+
+        public string ShippingAddress { get; set; }
+ 
     }
 }

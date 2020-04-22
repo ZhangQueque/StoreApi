@@ -86,6 +86,8 @@ namespace Store.Api
             services.Configure<SecurityConfigOptions>(Configuration.GetSection("Security:Token"));
             //单例没办法注册DB上下文
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+           
             services.AddScoped<IsExistProductAttribute>();
             services.AddScoped<RedisCacheHelper>();
 
