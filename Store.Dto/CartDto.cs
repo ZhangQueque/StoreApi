@@ -9,10 +9,12 @@ namespace Store.Dto
     /// </summary>
     public class CartDto
     {
+        public readonly DateTime Createtime;
+
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int UserId { get; set; }
-        public DateTime Createtime { get; set; }
+        public DateTime CreateTime { get; set; }
 
         public int Count { get; set; }
         public string Title { get; set; }

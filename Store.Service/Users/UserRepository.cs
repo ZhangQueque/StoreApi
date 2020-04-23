@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using System.Linq;
 namespace Store.Service.Users
 {
+    /// <summary>
+    /// 用户仓储
+    /// </summary>
     public class UserRepository:RepositoryBase<UserInfo,int>, IUserRepository
     {
         public UserRepository(DbContext dbContext):base(dbContext)

@@ -9,8 +9,4 @@
     <ProjectReference Include="..\Store.Dto\Store.Dto.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Carts\" />
-  </ItemGroup>
-
 </Project>

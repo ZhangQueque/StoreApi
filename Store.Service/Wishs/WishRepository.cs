@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Store.Service.Wishs
 {
+    /// <summary>
+    /// 商品收藏仓储
+    /// </summary>
     public class WishRepository : RepositoryBase<Wish, int>, IWishRepository
     {
         public WishRepository(DbContext context) : base(context)
@@ -52,7 +55,7 @@ namespace Store.Service.Wishs
 
             var list = context.Set<Wish>().Join(context.Set<UserInfo>(), w => w.UserId, u => u.Id, (w, u) => new WishDto
             {
-                Createtime = w.Createtime,
+                CreateTime = w.CreateTime,
                 Id = w.Id,
 
                 ProductId = w.ProductId,
@@ -70,7 +73,7 @@ namespace Store.Service.Wishs
                 Id = w.Id,
                 UserId = w.UserId,
                 UserName = w.UserName,
-                Createtime = w.Createtime,
+                CreateTime = w.CreateTime,
             }).Where(m=>m.UserId == userId);
 
             return await list.ToListAsync();

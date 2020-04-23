@@ -10,7 +10,8 @@ namespace Store.Dto
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int UserId { get; set; }
-        public DateTime Createtime { get; set; }
+        public string ShippingAddress { get; set; }
+        public DateTime CreateTime { get; set; }
 
         public int Count { get; set; }
 

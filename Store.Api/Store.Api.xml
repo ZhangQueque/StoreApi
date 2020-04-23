@@ -44,6 +44,12 @@
             <param name="email">邮箱</param>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.CartsController.GetCartsAsync">
+            <summary>
+            返回用户对应的购物车
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.ProductCategoriesController">
             <summary>
             商品类别API

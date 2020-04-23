@@ -24,7 +24,7 @@ namespace Store.Api.RedisCache
             string json = JsonSerializer.Serialize<T>(t);
             DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
             {
-                SlidingExpiration = TimeSpan.FromHours(3)
+                AbsoluteExpiration = DateTime.Now.AddHours(1)
             };
             await distributedCache.SetAsync(key, Encoding.UTF8.GetBytes(json), options);
         }

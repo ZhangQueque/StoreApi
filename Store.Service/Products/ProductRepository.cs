@@ -22,26 +22,26 @@ namespace Store.Service.Products
 
         public Task<IEnumerable<Product>> GetNewProductsAsync()
         {
-            return Task.FromResult( context.Set<Product>().Where(m => m.Status.Equals(0)).OrderByDescending(m=>m.CreateTime).Take(8).AsEnumerable());
+            return Task.FromResult( context.Set<Product>().Where(m => m.Status.Equals(0)&&m.Stock>0).OrderByDescending(m=>m.CreateTime).Take(8).AsEnumerable());
         }
 
         public async  Task<PageList<Product>> GetPageListsAsync(PageParameters pageParameters, int typeId)
         {
-            IQueryable<Product> source = context.Set<Product>().Where(m => m.Product_CategoryId == typeId &&m.Status.Equals(0));
+            IQueryable<Product> source = context.Set<Product>().Where(m => m.Product_CategoryId == typeId &&m.Status.Equals(0) && m.Stock > 0);
             if (typeId==0)
             {
-                source = context.Set<Product>().Where(m => m.Status.Equals(0));
+                source = context.Set<Product>().Where(m => m.Status.Equals(0) && m.Stock > 0);
             }
           
             if (!string.IsNullOrEmpty(pageParameters.Name))
             {
-                source = source.Where(m=>m.Title.Contains(pageParameters.Name) && m.Status.Equals(0));
+                source = source.Where(m=>m.Title.Contains(pageParameters.Name) && m.Status.Equals(0) && m.Stock > 0);
             }
 
             //价格区间
             if (pageParameters.BottomPrice!=0 && pageParameters.TopPrice!=0)
             {
-                source = source.Where(m => m.Price > pageParameters.BottomPrice && m.Price < pageParameters.TopPrice && m.Status.Equals(0));
+                source = source.Where(m => m.Price > pageParameters.BottomPrice && m.Price < pageParameters.TopPrice && m.Status.Equals(0) && m.Stock > 0);
             } //价格区间
 
             //价格排序
@@ -49,11 +49,11 @@ namespace Store.Service.Products
             {
                 if ((bool)pageParameters.IsPriceSort) //价格升序
                 {
-                    source = source.Where(m=>m.Status.Equals(0)).OrderBy<Product, decimal>(m => m.Price);
+                    source = source.Where(m=>m.Status.Equals(0) && m.Stock > 0).OrderBy<Product, decimal>(m => m.Price);
                 }
                 else //价格倒序
                 {
-                    source = source.Where(m => m.Status.Equals(0)).OrderByDescending<Product, decimal>(m => m.Price);
+                    source = source.Where(m => m.Status.Equals(0) && m.Stock > 0).OrderByDescending<Product, decimal>(m => m.Price);
                 }
               
             }//价格排序
@@ -64,11 +64,11 @@ namespace Store.Service.Products
             {
                 if ((bool)pageParameters.IsPurchaseSort) //销量升序
                 {
-                    source = source.Where(m => m.Status.Equals(0)).OrderBy<Product, int>(m => m.Purchase);
+                    source = source.Where(m => m.Status.Equals(0) && m.Stock > 0).OrderBy<Product, int>(m => m.Purchase);
                 }
                 else //销量倒序
                 {
-                    source = source.Where(m => m.Status.Equals(0)).OrderByDescending<Product, int>(m => m.Purchase);
+                    source = source.Where(m => m.Status.Equals(0) && m.Stock > 0).OrderByDescending<Product, int>(m => m.Purchase);
                 }
 
             }//销量排序
@@ -78,11 +78,11 @@ namespace Store.Service.Products
             {
                 if ((bool)pageParameters.IsTimeSort) //日期升序
                 {
-                    source = source.Where(m => m.Status.Equals(0)).OrderBy<Product, DateTime>(m => m.CreateTime);
+                    source = source.Where(m => m.Status.Equals(0) && m.Stock > 0).OrderBy<Product, DateTime>(m => m.CreateTime);
                 }
                 else //日期倒序
                 {
-                    source = source.Where(m => m.Status.Equals(0)).OrderByDescending<Product, DateTime>(m => m.CreateTime);
+                    source = source.Where(m => m.Status.Equals(0) && m.Stock > 0).OrderByDescending<Product, DateTime>(m => m.CreateTime);
                 }
 
             }//日期排序         
@@ -91,7 +91,7 @@ namespace Store.Service.Products
 
         public Task<IEnumerable<Product>> GetPageViewTopProductsAsync()
         {
-            return Task.FromResult(context.Set<Product>().Where(m => m.Status.Equals(0)).OrderByDescending(m =>m.PageView).Take(8).AsEnumerable());
+            return Task.FromResult(context.Set<Product>().Where(m => m.Status.Equals(0) && m.Stock > 0).OrderByDescending(m =>m.PageView).Take(8).AsEnumerable());
         }
 
         public async Task<Product> GetProductById(int id)
@@ -105,7 +105,7 @@ namespace Store.Service.Products
 
         public Task<IEnumerable<Product>> GetShopTopProductsAsync()
         {
-            return Task.FromResult(context.Set<Product>().Where(m => m.Status.Equals(0)).OrderByDescending(m => m.Purchase).Take(8).AsEnumerable());
+            return Task.FromResult(context.Set<Product>().Where(m => m.Status.Equals(0) && m.Stock > 0).OrderByDescending(m => m.Purchase).Take(8).AsEnumerable());
         }
     }
 }

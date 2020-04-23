@@ -34,12 +34,12 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <returns></returns>
        [HttpGet]
-        public async Task<IEnumerable<WishDto>> GetWishDtosAsync()
+        public async Task<ActionResult<IEnumerable<WishDto>>> GetWishDtosAsync()
         {
             int userId =Convert.ToInt32( User.Identity.Name);
             var data = await _repositoryWrapper.WishRepository.GetWishDtosAsync(userId);
 
-            return data;
+            return data.ToList();
         }
 
 
@@ -51,7 +51,7 @@ namespace Store.Api.Controllers
        [HttpPost]
         public async Task<IActionResult> AddWishAsync(Wish wish)
         {
-            wish.Createtime = DateTime.Now;
+            wish.CreateTime = DateTime.Now;
             await _repositoryWrapper.WishRepository.AddAsync(wish);
             if (!await _repositoryWrapper.WishRepository.SaveAsync())
             {

@@ -16,6 +16,6 @@ namespace Store.Data.Entities
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int UserId { get; set; }
-        public DateTime Createtime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

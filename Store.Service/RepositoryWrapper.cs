@@ -1,4 +1,6 @@
 ﻿using Store.Data;
+using Store.Service.Carts;
+using Store.Service.Orders;
 using Store.Service.Product_Categories;
 using Store.Service.Products;
 using Store.Service.Users;
@@ -24,5 +26,9 @@ namespace Store.Service
         public IUserRepository UserRepository => new UserRepository(context);
 
         public IWishRepository WishRepository => new WishRepository(context);
+
+        public ICartRepository CartRepository => new CartRepository(context);
+
+        public IOrderRepository OrderRepository => new OrderRepository(context);
     }
 }

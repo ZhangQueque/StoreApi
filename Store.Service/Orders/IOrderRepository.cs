@@ -5,19 +5,18 @@ using System.Text;
 using Store.Data.Repository;
 using System.Threading.Tasks;
 using Store.Dto;
-
-namespace Store.Service.Wishs
+namespace Store.Service.Orders
 {
     /// <summary>
-    /// 商品收藏仓储接口
+    /// 商品订单仓储接口
     /// </summary>
-    public interface IWishRepository:IRepositoryBaseT<Wish>,IRepositoryBaseTId<Wish, int>
+    public interface IOrderRepository : IRepositoryBaseT<Order>, IRepositoryBaseTId<Order, int>
     {
         /// <summary>
-        /// 获取用户对应的收藏
+        /// 获取用户对应的订单
         /// </summary>
         /// <param name="userId">用户id</param>
         /// <returns></returns>
-        Task<IEnumerable<WishDto>> GetWishDtosAsync(int userId);
+        Task<IEnumerable<OrderDto>> GetOrdersAsync(int userId);
     }
 }
