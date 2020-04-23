@@ -50,6 +50,45 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.CartsController.AddCartAsync(Store.Data.Entities.Cart)">
+            <summary>
+            购物车新增
+            </summary>
+            <param name="cart">新增对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.CartsController.DeleteCartAsync(System.Int32)">
+            <summary>
+            购物车删除
+            </summary>
+            <param name="id">购物车主键</param>
+            <returns></returns>
+        </member>
+        <member name="T:Store.Api.Controllers.OrdersController">
+            <summary>
+            订单控制器
+            </summary>
+        </member>
+        <member name="M:Store.Api.Controllers.OrdersController.GetCartsAsync">
+            <summary>
+            返回用户对应的订单列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.OrdersController.AddOrderAsync(Store.Data.Entities.Order)">
+            <summary>
+            新增订单
+            </summary>
+            <param name="order">新增对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.OrdersController.DeleteOrderAsync(System.Int32)">
+            <summary>
+            订单删除
+            </summary>
+            <param name="id">订单主键</param>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.ProductCategoriesController">
             <summary>
             商品类别API

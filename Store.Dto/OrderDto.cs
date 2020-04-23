@@ -19,8 +19,7 @@ namespace Store.Dto
 
         public int Status { get; set; }
 
-        public int RealPrice { get; set; }
-        public string Title { get; set; }
+         public string Title { get; set; }
         public string ShortDescribe { get; set; }
         public decimal Price { get; set; }
         public string Pictrue { get; set; }

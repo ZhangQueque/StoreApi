@@ -24,6 +24,5 @@ namespace Store.Data.Entities
 
         public int Status { get; set; }
 
-        public int RealPrice { get; set; }
-    }
+     }
 }
