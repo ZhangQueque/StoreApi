@@ -41,12 +41,7 @@ namespace Store.Data.Repository
         /// <returns></returns>
         Task<IQueryable<T>> GetAllAsync();
 
-        /// <summary>
-        /// 获取分页数据
-        /// </summary>
-        /// <param name="pageParameters">分页参数</param>
-        /// <returns></returns>
-        Task<PageList<T>> GetPageListsAsync(PageParameters pageParameters);
+      
 
         /// <summary>
         /// 保存到数据库

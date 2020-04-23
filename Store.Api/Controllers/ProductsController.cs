@@ -20,6 +20,9 @@ using Store.Api.Attributes;
 
 namespace Store.Api.Controllers
 {
+    /// <summary>
+    /// 商品
+    /// </summary>
     [Route("api/{typeId}/products")]
     [ApiController]
     public class ProductsController : ControllerBase

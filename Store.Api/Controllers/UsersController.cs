@@ -10,6 +10,9 @@ using AutoMapper;
 
 namespace Store.Api.Controllers
 {
+    /// <summary>
+    /// 用户控制器
+    /// </summary>
     [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase

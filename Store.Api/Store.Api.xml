@@ -56,6 +56,11 @@
             <param name="id">商品类别id</param>
             <returns></returns>
         </member>
+        <member name="T:Store.Api.Controllers.ProductsController">
+            <summary>
+            商品
+            </summary>
+        </member>
         <member name="M:Store.Api.Controllers.ProductsController.GetProductsAsync(System.Int32,Store.Core.Pages.PageParameters)">
             <summary>
             商品信息列表
@@ -99,6 +104,36 @@
             测试数据
             </summary>
             <returns>测试数据</returns>
+        </member>
+        <member name="T:Store.Api.Controllers.UsersController">
+            <summary>
+            用户控制器
+            </summary>
+        </member>
+        <member name="T:Store.Api.Controllers.WishsController">
+            <summary>
+            商品收藏
+            </summary>
+        </member>
+        <member name="M:Store.Api.Controllers.WishsController.GetWishDtosAsync">
+            <summary>
+            用户对应的收藏列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.WishsController.AddWishAsync(Store.Data.Entities.Wish)">
+            <summary>
+            添加收藏
+            </summary>
+            <param name="wish">收藏对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.WishsController.DeleteWishAsync(System.Int32)">
+            <summary>
+            删除收藏
+            </summary>
+            <param name="id">收藏主键</param>
+            <returns></returns>
         </member>
         <member name="T:Store.Api.Filter.ErrorClass">
             <summary>

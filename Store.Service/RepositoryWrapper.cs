@@ -2,6 +2,7 @@
 using Store.Service.Product_Categories;
 using Store.Service.Products;
 using Store.Service.Users;
+using Store.Service.Wishs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,5 +22,7 @@ namespace Store.Service
         public IProduct_CategoryRepository Product_CategoryRepository => new Product_CategoryRepository(context);
 
         public IUserRepository UserRepository => new UserRepository(context);
+
+        public IWishRepository WishRepository => new WishRepository(context);
     }
 }

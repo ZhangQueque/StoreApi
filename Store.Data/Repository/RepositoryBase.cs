@@ -44,10 +44,7 @@ namespace Store.Data.Repository
            return  await context.Set<T>().FindAsync(id);
         }
 
-        public virtual Task<PageList<T>> GetPageListsAsync(PageParameters pageParameters)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public async Task<bool> IsExistAsync(TId id)
         {

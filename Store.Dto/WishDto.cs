@@ -12,6 +12,7 @@ namespace Store.Dto
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; }
         public DateTime Createtime { get; set; }
         public string Title { get; set; }
         public string ShortDescribe { get; set; }
