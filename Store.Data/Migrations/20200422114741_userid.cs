@@ -6,27 +6,12 @@ namespace Store.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Address",
-                table: "UserInfos");
-
-            migrationBuilder.AddColumn<string>(
-                name: "ShippingAddress",
-                table: "UserInfos",
-                nullable: true);
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ShippingAddress",
-                table: "UserInfos");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Address",
-                table: "UserInfos",
-                type: "longtext CHARACTER SET utf8mb4",
-                nullable: true);
+           
         }
     }
 }

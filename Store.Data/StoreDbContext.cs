@@ -27,5 +27,9 @@ namespace Store.Data
         public DbSet<Product_Image> Product_Images { get; set; }
         public DbSet<Product_Size> Product_Sizes { get; set; }
         public DbSet<Product_Describe> Product_Describes { get; set; }
+        public DbSet<Wish> Wishes { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
     }
 }
