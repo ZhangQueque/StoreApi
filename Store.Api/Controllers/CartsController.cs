@@ -30,6 +30,7 @@ namespace Store.Api.Controllers
         /// 返回用户对应的购物车
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<CartDto>>> GetCartsAsync()
         {
             int userId = Convert.ToInt32(User.Identity.Name);
@@ -44,9 +45,10 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <param name="cart">新增对象</param>
         /// <returns></returns>
-
+        [HttpPost]
         public async Task<IActionResult> AddCartAsync(Cart cart)
         {
+            cart.UserId= Convert.ToInt32(User.Identity.Name); 
             cart.CreateTime = DateTime.Now;
             await _repositoryWrapper.CartRepository.AddAsync(cart);
             if (!await _repositoryWrapper.CartRepository.SaveAsync())

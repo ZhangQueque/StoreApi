@@ -52,6 +52,7 @@ namespace Store.Api.Controllers
         public async Task<IActionResult> AddWishAsync(Wish wish)
         {
             wish.CreateTime = DateTime.Now;
+            wish.UserId = Convert.ToInt32(User.Identity.Name);
             await _repositoryWrapper.WishRepository.AddAsync(wish);
             if (!await _repositoryWrapper.WishRepository.SaveAsync())
             {
@@ -69,6 +70,7 @@ namespace Store.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWishAsync(int id)
         {
+
             var wish =await _repositoryWrapper.WishRepository.GetByIdAsync(id);
             if (wish==null)
             {

@@ -11,6 +11,8 @@ using Store.Data;
 using Store.Service;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.Authorization;
+using System.Runtime.InteropServices;
+
 namespace Store.Api.Controllers
 {
 
@@ -40,7 +42,7 @@ namespace Store.Api.Controllers
         /// <returns>测试数据</returns>
         [HttpGet]//[HttpGet("{id}")]
                  // [ServiceFilter(typeof(IsExistProductAttribute))]
-       [Authorize]
+       [Authorize(Roles ="管理员")]
         public  IActionResult Get()
         {
             //var list =await repositoryWrapper.Product_CategoryRepository.GetAllAsync();
@@ -52,7 +54,7 @@ namespace Store.Api.Controllers
             //var a = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, 5);
 
             // return Ok((await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters,5)));
-           
+            var a= User.Claims;
             return Ok(User.Identity.Name);
         }
     }

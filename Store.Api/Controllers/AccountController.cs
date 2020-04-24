@@ -116,6 +116,7 @@ namespace Store.Api.Controllers
                 new Claim(JwtClaimTypes.Name,user.Id.ToString()),
                 new Claim(JwtClaimTypes.NickName,user.NickName),
                 new Claim(JwtClaimTypes.Email,user.Email )
+ 
             };
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityConfigOptions.Key));
@@ -134,7 +135,7 @@ namespace Store.Api.Controllers
 
 
         /// <summary>
-        /// 邮箱注册，返回token
+        /// 邮箱注册，返回token         
         /// </summary>
         /// <param name="register">注册对象</param>
         /// <returns></returns>

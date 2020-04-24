@@ -33,6 +33,7 @@ namespace Store.Api.Controllers
         /// 返回用户对应的订单列表
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetCartsAsync()
         {
             int userId = Convert.ToInt32(User.Identity.Name);
@@ -46,10 +47,12 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <param name="order">新增对象</param>
         /// <returns></returns>
+        [HttpPost]
         public async Task<IActionResult> AddOrderAsync(Order order)
         {
              
             order.CreateTime = DateTime.Now;
+            order.UserId= Convert.ToInt32(User.Identity.Name);
             var buyProduct = await _repositoryWrapper.ProductRepository.GetByIdAsync(order.ProductId);
             if (buyProduct==null)
             {
