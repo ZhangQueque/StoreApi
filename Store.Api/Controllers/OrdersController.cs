@@ -59,7 +59,7 @@ namespace Store.Api.Controllers
                 return NotFound();
             }
             buyProduct.Stock = buyProduct.Stock - order.Count;
-
+            buyProduct.Purchase = buyProduct.Purchase + order.Count;
             await _repositoryWrapper.ProductRepository.UpdateAsync(buyProduct);
             if (!  await _repositoryWrapper.ProductRepository.SaveAsync())
             {
