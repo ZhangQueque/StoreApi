@@ -64,7 +64,7 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <param name="id">购物车主键</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpGet("delete/{id}")]
         public async Task<IActionResult> DeleteCartAsync(int id)
         {
             var cart = await _repositoryWrapper.CartRepository.GetByIdAsync(id);

@@ -73,7 +73,7 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <param name="id">收藏主键</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpGet("delete/{id}")]
         public async Task<IActionResult> DeleteWishAsync(int id)
         {
 

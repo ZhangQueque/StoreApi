@@ -80,7 +80,7 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <param name="id">订单主键</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpGet("delete/{id}")]
         public async Task<IActionResult> DeleteOrderAsync(int id)
         {
             var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
