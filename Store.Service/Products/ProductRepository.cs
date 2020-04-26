@@ -86,7 +86,7 @@ namespace Store.Service.Products
                 }
 
             }//日期排序         
-            return await PageList<Product>.CreateLayuiList(source,pageParameters.PageIndex,pageParameters.PageSize); ;
+            return await PageList<Product>.CreatePageList(source,pageParameters.PageIndex,pageParameters.PageSize); ;
         }
 
         public Task<IEnumerable<Product>> GetPageViewTopProductsAsync()

@@ -25,7 +25,7 @@
         </member>
         <member name="M:Store.Api.Controllers.AccountController.EmailRegisterAsync(Store.Dto.User_EmailLoginDto)">
             <summary>
-            邮箱注册，返回token
+            邮箱注册，返回token         
             </summary>
             <param name="register">注册对象</param>
             <returns></returns>
@@ -44,7 +44,7 @@
             <param name="email">邮箱</param>
             <returns></returns>
         </member>
-        <member name="M:Store.Api.Controllers.CartsController.GetCartsAsync">
+        <member name="M:Store.Api.Controllers.CartsController.GetCartsAsync(System.Int32,System.Int32)">
             <summary>
             返回用户对应的购物车
             </summary>
@@ -155,12 +155,18 @@
             用户控制器
             </summary>
         </member>
+        <member name="M:Store.Api.Controllers.UsersController.GetCommonDtoAsync">
+            <summary>
+            获取公共数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.WishsController">
             <summary>
             商品收藏
             </summary>
         </member>
-        <member name="M:Store.Api.Controllers.WishsController.GetWishDtosAsync">
+        <member name="M:Store.Api.Controllers.WishsController.GetWishDtosAsync(System.Int32,System.Int32)">
             <summary>
             用户对应的收藏列表
             </summary>

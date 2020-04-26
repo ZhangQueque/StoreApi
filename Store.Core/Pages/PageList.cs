@@ -30,7 +30,7 @@ namespace Store.Core.Pages
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public static async Task<PageList<T>> CreateLayuiList(IQueryable<T> source, int pageIndex, int pageSize)
+        public static async Task<PageList<T>> CreatePageList(IQueryable<T> source, int pageIndex, int pageSize)
         {
             var totalCount = source.Count();
             var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize);

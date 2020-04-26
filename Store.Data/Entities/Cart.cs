@@ -17,7 +17,7 @@ namespace Store.Data.Entities
         public int ProductId { get; set; }
         public int UserId { get; set; }
         public DateTime CreateTime { get; set; }
-
+        public string Size { get; set; }
         public int Count { get; set; }
 
      }

@@ -21,13 +21,13 @@ namespace Store.Service.Carts
 
         }
 
-        public async Task<IEnumerable<CartDto>> GetCartsAsync(int userId)
+        public async Task<IEnumerable<CartDto>> GetCartDtosAsync(int userId)
         {
             var list = context.Set<Cart>().Join(context.Set<UserInfo>(), c => c.UserId, u => u.Id, (c, u) => new CartDto
             {
                 CreateTime = c.CreateTime,
                 Id = c.Id,
-                  
+                   Size=c.Size,
                 ProductId = c.ProductId,
                 UserId = u.Id,
                 Count = c.Count
@@ -44,6 +44,7 @@ namespace Store.Service.Carts
                 Id = c.Id,
                 UserId = c.UserId,       
                 CreateTime = c.CreateTime,
+                Size = c.Size
             }).Where(m => m.UserId == userId);
 
             return await list.ToListAsync();

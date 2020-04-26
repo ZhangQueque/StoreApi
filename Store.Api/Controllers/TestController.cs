@@ -42,8 +42,9 @@ namespace Store.Api.Controllers
         /// <returns>测试数据</returns>
         [HttpGet]//[HttpGet("{id}")]
                  // [ServiceFilter(typeof(IsExistProductAttribute))]
-       [Authorize(Roles ="管理员")]
-        public  IActionResult Get()
+       [Authorize(Roles ="管理员,员工")]
+ 
+        public IActionResult Get()
         {
             //var list =await repositoryWrapper.Product_CategoryRepository.GetAllAsync();
             //var list2 = await repositoryWrapper.Product_CategoryRepository.GetTreeProduct_CategoryDtoes(1);

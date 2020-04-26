@@ -19,5 +19,8 @@ namespace Store.Service.Wishs
         /// <param name="userId">用户id</param>
         /// <returns></returns>
         Task<IEnumerable<WishDto>> GetWishDtosAsync(int userId);
+
+
+        Task<bool> IsExistProductInWishAsync(int productId);
     }
 }

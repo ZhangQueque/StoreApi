@@ -115,8 +115,12 @@ namespace Store.Api.Controllers
             {
                 new Claim(JwtClaimTypes.Name,user.Id.ToString()),
                 new Claim(JwtClaimTypes.NickName,user.NickName),
-                new Claim(JwtClaimTypes.Email,user.Email )
- 
+                new Claim(JwtClaimTypes.Email,user.Email ),
+                //new Claim(JwtClaimTypes.Role,"员工"),
+                //new Claim(JwtClaimTypes.Role,"管理员"),
+                //new Claim(JwtClaimTypes.Role,"游民")
+
+
             };
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityConfigOptions.Key));
@@ -281,7 +285,7 @@ namespace Store.Api.Controllers
             Regex regex = new Regex(@"[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?");
             if (!regex.IsMatch(email))
             {
-                return Ok(new { code=1,msg="请输入正确的邮箱！"});
+                return Ok(new { code = 1, msg = "请输入正确的邮箱！" });
             }
 
             SendEmailModel sendEmailModel = new SendEmailModel
@@ -291,9 +295,9 @@ namespace Store.Api.Controllers
                 Content = "缺缺提醒您：请联系管理员，QQ：3393597524！",
                 Key = "138345",
                 Addresser = "缺缺",
-                Recipients=""     
-              };
-               var response = await _httpClient.PostAsJsonAsync("/api/service/smtp", new List<SendEmailModel>() { sendEmailModel });
+                Recipients = ""
+            };
+            var response = await _httpClient.PostAsJsonAsync("/api/service/smtp", new List<SendEmailModel>() { sendEmailModel });
             if (response.IsSuccessStatusCode)
             {
                 return Ok("发送成功！");

@@ -9,6 +9,7 @@ using Store.Dto;
 using Store.Service;
 using Microsoft.AspNetCore.Authorization;
 using Store.Data.Entities;
+using Store.Core.Pages;
 
 namespace Store.Api.Controllers
 {
@@ -34,12 +35,13 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <returns></returns>
        [HttpGet]
-        public async Task<ActionResult<IEnumerable<WishDto>>> GetWishDtosAsync()
+        public async Task<ActionResult<PageList<WishDto>>> GetWishDtosAsync(int index,int size)
         {
             int userId =Convert.ToInt32( User.Identity.Name);
             var data = await _repositoryWrapper.WishRepository.GetWishDtosAsync(userId);
+            PageList<WishDto> pageList =await PageList<WishDto>.CreatePageList(data.AsQueryable(), index, size);
 
-            return data.ToList();
+            return pageList;
         }
 
 
@@ -49,8 +51,12 @@ namespace Store.Api.Controllers
         /// <param name="wish">收藏对象</param>
         /// <returns></returns>
        [HttpPost]
-        public async Task<IActionResult> AddWishAsync(Wish wish)
+        public async Task<IActionResult> AddWishAsync([FromBody]Wish wish)
         {
+             if (await _repositoryWrapper.WishRepository.IsExistProductInWishAsync(wish.ProductId))
+            {
+                return Ok(new { Code=1});
+            }
             wish.CreateTime = DateTime.Now;
             wish.UserId = Convert.ToInt32(User.Identity.Name);
             await _repositoryWrapper.WishRepository.AddAsync(wish);
@@ -58,7 +64,7 @@ namespace Store.Api.Controllers
             {
                 return BadRequest();
             }
-            return CreatedAtAction(nameof(GetWishDtosAsync),null, wish);
+            return Ok(new { Code = 0 });
         }
 
 

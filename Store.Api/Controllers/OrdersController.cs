@@ -48,7 +48,7 @@ namespace Store.Api.Controllers
         /// <param name="order">新增对象</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddOrderAsync(Order order)
+        public async Task<IActionResult> AddOrderAsync([FromBody]Order order)
         {
              
             order.CreateTime = DateTime.Now;
@@ -72,7 +72,7 @@ namespace Store.Api.Controllers
                 return BadRequest();
             }
 
-            return CreatedAtAction(nameof(GetCartsAsync),null, order);
+            return Ok();
         }
 
         /// <summary>

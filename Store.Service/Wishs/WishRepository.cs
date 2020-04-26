@@ -78,5 +78,11 @@ namespace Store.Service.Wishs
 
             return await list.ToListAsync();
         }
+
+        public async Task<bool> IsExistProductInWishAsync(int productId)
+        {
+            return await context.Set<Wish>().FirstOrDefaultAsync(m => m.ProductId == productId) != null;
+
+        }
     }
 }

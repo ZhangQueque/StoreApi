@@ -9,6 +9,7 @@ using Store.Service;
 using AutoMapper;
 using Store.Dto;
 using Store.Data.Entities;
+using Store.Core.Pages;
 
 namespace Store.Api.Controllers
 {
@@ -31,12 +32,12 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartDto>>> GetCartsAsync()
+        public async Task<ActionResult<PageList<CartDto>>> GetCartsAsync(int index, int size)
         {
             int userId = Convert.ToInt32(User.Identity.Name);
-            var data = await _repositoryWrapper.CartRepository.GetCartsAsync(userId);
-
-            return data.ToList();
+            var data = await _repositoryWrapper.CartRepository.GetCartDtosAsync(userId);
+            PageList<CartDto> pageList = await PageList<CartDto>.CreatePageList(data.AsQueryable(), index, size);
+            return pageList;
         }
 
 
@@ -46,7 +47,7 @@ namespace Store.Api.Controllers
         /// <param name="cart">新增对象</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddCartAsync(Cart cart)
+        public async Task<IActionResult> AddCartAsync([FromBody]Cart cart)
         {
             cart.UserId= Convert.ToInt32(User.Identity.Name); 
             cart.CreateTime = DateTime.Now;
@@ -55,7 +56,7 @@ namespace Store.Api.Controllers
             {
                 return BadRequest();
             }
-            return CreatedAtAction(nameof(GetCartsAsync), null, cart);
+            return Ok();
         }
 
         /// <summary>

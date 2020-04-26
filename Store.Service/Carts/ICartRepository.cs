@@ -18,6 +18,8 @@ namespace Store.Service.Carts
         /// </summary>
         /// <param name="userId">用户id</param>
         /// <returns></returns>
-        Task<IEnumerable<CartDto>> GetCartsAsync(int userId);
+        Task<IEnumerable<CartDto>> GetCartDtosAsync(int userId);
+
+         
     }
 }
