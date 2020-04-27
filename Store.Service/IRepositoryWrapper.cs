@@ -1,4 +1,5 @@
 ﻿using Store.Service.Carts;
+using Store.Service.Commons;
 using Store.Service.Orders;
 using Store.Service.Product_Categories;
 using Store.Service.Products;
@@ -19,5 +20,6 @@ namespace Store.Service
 
         ICartRepository CartRepository { get; }
         IOrderRepository OrderRepository { get; }
+        ICommonRepository<object, int> CommonRepository { get; }
     }
 }

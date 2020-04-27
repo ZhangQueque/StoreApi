@@ -6,6 +6,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Store.Data;
 using Store.Data.Entities;
 using Store.Dto;
 using Store.Service;
@@ -22,11 +24,14 @@ namespace Store.Api.Controllers
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
+        private readonly StoreDbContext _context;
 
-        public OrdersController(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public OrdersController(IRepositoryWrapper repositoryWrapper, IMapper mapper, StoreDbContext context)
         {
             this._repositoryWrapper = repositoryWrapper;
             this._mapper = mapper;
+            this._context = context;
+
         }
 
         /// <summary>
@@ -56,7 +61,11 @@ namespace Store.Api.Controllers
             var buyProduct = await _repositoryWrapper.ProductRepository.GetByIdAsync(order.ProductId);
             if (buyProduct==null)
             {
-                return NotFound();
+                return NotFound("该商品不存在！");
+            }
+            if (buyProduct.Stock==0)
+            {
+                return NotFound("该商品已下架！");
             }
             buyProduct.Stock = buyProduct.Stock - order.Count;
             buyProduct.Purchase = buyProduct.Purchase + order.Count;
@@ -71,12 +80,20 @@ namespace Store.Api.Controllers
             {
                 return BadRequest();
             }
+            if (order.Status==1)
+            {
+                var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "Order");
+                commonData.Value = commonData.Value + order.Count;
+                _context.CommonDatas.Update(commonData);
+                await _context.SaveChangesAsync();
+            }
+         
 
             return Ok();
         }
 
         /// <summary>
-        /// 订单删除
+        /// 订单取消
         /// </summary>
         /// <param name="id">订单主键</param>
         /// <returns></returns>
@@ -88,11 +105,35 @@ namespace Store.Api.Controllers
             {
                 return NotFound();
             }
-            await _repositoryWrapper.OrderRepository.DeleteAsync(order);
+            var buyProduct = await _repositoryWrapper.ProductRepository.GetByIdAsync(order.ProductId);
+            if (buyProduct == null)
+            {
+                return NotFound("该商品不存在！");
+            }
+ 
+            order.Status = 4;
+            await _repositoryWrapper.OrderRepository.UpdateAsync(order);
             if (!await _repositoryWrapper.OrderRepository.SaveAsync())
             {
                 return BadRequest();
             }
+
+            buyProduct.Stock = buyProduct.Stock + order.Count;
+            buyProduct.Purchase = buyProduct.Purchase - order.Count;
+            await _repositoryWrapper.ProductRepository.UpdateAsync(buyProduct);
+            if (!await _repositoryWrapper.ProductRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+
+            if (order.Status == 1)
+            {
+                var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "Order");
+                commonData.Value = commonData.Value - order.Count;
+                _context.CommonDatas.Update(commonData);
+                await _context.SaveChangesAsync();
+            }
+
             return NoContent();
         }
     }

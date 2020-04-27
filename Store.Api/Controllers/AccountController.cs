@@ -24,6 +24,8 @@ using Store.Data.Entities;
 using System.Text.RegularExpressions;
 using System.Net.Http.Headers;
 using Microsoft.Net.Http.Headers;
+using Store.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Store.Api.Controllers
 {
@@ -40,14 +42,17 @@ namespace Store.Api.Controllers
         private readonly IDistributedCache _distributedCache;
         private readonly IMapper _mapper;
         private readonly SecurityConfigOptions _securityConfigOptions;
+        private readonly StoreDbContext _context;
 
-        public AccountController(IHttpClientFactory httpClientFactory, IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache, IOptions<SecurityConfigOptions> option, IMapper mapper)
+        public AccountController(IHttpClientFactory httpClientFactory, IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache, IOptions<SecurityConfigOptions> option, IMapper mapper, StoreDbContext context)
         {
             this._httpClient = httpClientFactory.CreateClient("service");
             this._repositoryWrapper = repositoryWrapper;
             this._distributedCache = distributedCache;
             this._mapper = mapper;
             this._securityConfigOptions = option.Value;
+            this._context = context;
+
         }
 
         /// <summary>
@@ -180,6 +185,12 @@ namespace Store.Api.Controllers
                    signingCredentials: sig,
                    expires: DateTime.Now.AddMinutes(120)
                  );
+            var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");
+            commonData.Value = commonData.Value + 1;
+            _context.CommonDatas.Update(commonData);
+            await _context.SaveChangesAsync();
+
+
             return Ok(new { code = 0, msg = "注册成功！", token = new JwtSecurityTokenHandler().WriteToken(jwtToken) });
         }
 
@@ -271,6 +282,11 @@ namespace Store.Api.Controllers
                    signingCredentials: sig2,
                    expires: DateTime.Now.AddMinutes(120)
                  );
+
+            var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");
+            commonData.Value = commonData.Value + 1;
+            _context.CommonDatas.Update(commonData);
+            await _context.SaveChangesAsync();
             return Ok(new { code = 0, msg = "验证成功！", token = new JwtSecurityTokenHandler().WriteToken(jwtToken2) });
         }
 

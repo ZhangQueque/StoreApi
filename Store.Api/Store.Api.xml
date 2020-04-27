@@ -84,7 +84,7 @@
         </member>
         <member name="M:Store.Api.Controllers.OrdersController.DeleteOrderAsync(System.Int32)">
             <summary>
-            订单删除
+            订单取消
             </summary>
             <param name="id">订单主键</param>
             <returns></returns>

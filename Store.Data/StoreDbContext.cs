@@ -31,5 +31,15 @@ namespace Store.Data
         public DbSet<Cart> Carts { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+
+        //Common
+        public DbSet<CommonData> CommonDatas { get; set; }
+
+        public DbSet<LogMessage> LogMessages { get; set; }
+
+        public DbSet<CheckLogin> CheckLogins { get; set; }
+
+
     }
 }
