@@ -4,6 +4,7 @@ using Store.Service.Commons;
 using Store.Service.Orders;
 using Store.Service.Product_Categories;
 using Store.Service.Products;
+using Store.Service.User_Roles;
 using Store.Service.Users;
 using Store.Service.Wishs;
 using System;
@@ -33,5 +34,7 @@ namespace Store.Service
         public IOrderRepository OrderRepository => new OrderRepository(context);
 
         public ICommonRepository<object, int> CommonRepository => new CommonRepository<object,int>(context);
+
+        public IUser_RoleRepository User_RoleRepository => new User_RoleRepository(context);
     }
 }

@@ -15,6 +15,7 @@ using System.Text;
 using System.Net;
 using Store.Data;
 using Microsoft.EntityFrameworkCore;
+using Store.Data.Entities;
 
 namespace Store.Api.Controllers
 {
@@ -41,7 +42,7 @@ namespace Store.Api.Controllers
 
         [HttpGet("view")]
         [AllowAnonymous]
-        public async Task<IActionResult> ViewAdd()
+        public async Task<IActionResult> ViewAddAsync()
         {
             string ipAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault(m => m.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).ToString();
             string ip = await distributedCache.GetStringAsync($"{ipAddress}_IP4");
@@ -50,7 +51,7 @@ namespace Store.Api.Controllers
 
                 DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
                 {
-                    AbsoluteExpiration = DateTime.Now.AddMinutes(2)
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(15)
                 };
                 var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "View");
                 commonData.Value = commonData.Value + 1;
@@ -66,7 +67,7 @@ namespace Store.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<CommonDto> GetCommonDtoAsync()
+        public async Task<ActionResult<CommonDto>> GetCommonDtoAsync()
         {
            
             int userId = Convert.ToInt32(User.Identity.Name);
@@ -78,12 +79,38 @@ namespace Store.Api.Controllers
             common.CartCount = (await _repositoryWrapper.CartRepository.GetCartDtosAsync(userId)).Count();
             common.NickName = User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value;
 
-          
+
+            var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == userId);
+            if (checkLogin.Status==1)
+            {
+                return BadRequest();
+            }
+
             return common;
           
            // common= JsonSerializer.Deserialize<CommonDto>(Encoding.UTF8.GetString(bytes));
           //  return common;
         }
-       
+
+
+        [HttpGet("logout")]
+         public async Task<IActionResult> LogOut()
+        {
+            int userId = Convert.ToInt32(User.Identity.Name);
+
+            var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == userId);
+            if (checkLogin == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                checkLogin.Status = 1;
+                _context.CheckLogins.Update(checkLogin);
+            }
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

@@ -115,13 +115,14 @@ namespace Store.Api.Controllers
             {
                 return NotFound();
             }
+            var roleInfo = await _repositoryWrapper.User_RoleRepository.GetUser_RoleByUserIdAsync(user.Id);
 
             List<Claim> claimList = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Name,user.Id.ToString()),
                 new Claim(JwtClaimTypes.NickName,user.NickName),
                 new Claim(JwtClaimTypes.Email,user.Email ),
-                //new Claim(JwtClaimTypes.Role,"员工"),
+                new Claim(JwtClaimTypes.Role,roleInfo.RoleName) 
                 //new Claim(JwtClaimTypes.Role,"管理员"),
                 //new Claim(JwtClaimTypes.Role,"游民")
 
@@ -138,7 +139,25 @@ namespace Store.Api.Controllers
                    claims: claimList,
                    signingCredentials: sig,
                    expires: DateTime.Now.AddMinutes(120)
-                 ); ;
+                 ) ;
+
+            LogMessage logMessage = new LogMessage { Content=$" \"{user.NickName}\" 登陆了！",CreateTime=DateTime.Now};
+            await _context.LogMessages.AddAsync(logMessage);
+            await _context.SaveChangesAsync();
+
+
+            var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m=>m.UserId==user.Id);
+            if (checkLogin == null)
+            {
+                CheckLogin check  = new CheckLogin { UserId = user.Id, Status = 0 };
+                await _context.CheckLogins.AddAsync(check);
+            }
+            else {
+                checkLogin.Status = 0;
+                  _context.CheckLogins.Update(checkLogin);
+            }
+            await _context.SaveChangesAsync();
+
             return Ok(new { code = 0, msg = "登录成功！", token = new JwtSecurityTokenHandler().WriteToken(jwtToken) }); ;
         }
 
@@ -167,11 +186,20 @@ namespace Store.Api.Controllers
             {
                 return BadRequest();
             }
+            User_Role user_Role = new User_Role {  RoleId=2, RoleName="帮众", UserId = user.Id, UserEmail=user.Email};
+
+            await _repositoryWrapper.User_RoleRepository.AddAsync(user_Role);
+            await _repositoryWrapper.User_RoleRepository.SaveAsync();
+
+            var roleInfo = await _repositoryWrapper.User_RoleRepository.GetUser_RoleByUserIdAsync(user.Id);
+            
             List<Claim> claimList = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Name,user.Id.ToString()),
                 new Claim(JwtClaimTypes.NickName,user.NickName),
-                new Claim(JwtClaimTypes.Email,user.Email )
+
+                new Claim(JwtClaimTypes.Email,user.Email ),
+                new Claim(JwtClaimTypes.Role, roleInfo.RoleName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityConfigOptions.Key));
@@ -190,6 +218,23 @@ namespace Store.Api.Controllers
             _context.CommonDatas.Update(commonData);
             await _context.SaveChangesAsync();
 
+
+            LogMessage logMessage = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
+            await _context.LogMessages.AddAsync(logMessage);
+            await _context.SaveChangesAsync();
+
+            var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == user.Id);
+            if (checkLogin == null)
+            {
+                CheckLogin check = new CheckLogin { UserId = user.Id, Status = 0 };
+                await _context.CheckLogins.AddAsync(check);
+            }
+            else
+            {
+                checkLogin.Status = 0;
+                _context.CheckLogins.Update(checkLogin);
+            }
+            await _context.SaveChangesAsync();
 
             return Ok(new { code = 0, msg = "注册成功！", token = new JwtSecurityTokenHandler().WriteToken(jwtToken) });
         }
@@ -218,11 +263,14 @@ namespace Store.Api.Controllers
 
                 }
                 user = await _repositoryWrapper.UserRepository.PhoneLoginAsync(login.Phone);
+                var roleInfo2 = await _repositoryWrapper.User_RoleRepository.GetUser_RoleByUserIdAsync(user.Id);
                 List<Claim> claimList = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Name,user.Id.ToString()),
                 new Claim(JwtClaimTypes.NickName,user.NickName),
-                 new Claim(JwtClaimTypes.PhoneNumber,user.Phone )
+                 new Claim(JwtClaimTypes.PhoneNumber,user.Phone ),
+                 new Claim(JwtClaimTypes.Role, roleInfo2.RoleName)
+
             };
 
                 var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityConfigOptions.Key));
@@ -236,6 +284,24 @@ namespace Store.Api.Controllers
                        signingCredentials: sig,
                        expires: DateTime.Now.AddMinutes(120)
                      );
+
+                LogMessage logMessage2 = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
+                await _context.LogMessages.AddAsync(logMessage2);
+                await _context.SaveChangesAsync();
+
+                var checkLogin2 = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == user.Id);
+                if (checkLogin2 == null)
+                {
+                    CheckLogin check2 = new CheckLogin { UserId = user.Id, Status = 0 };
+                    await _context.CheckLogins.AddAsync(check2);
+                }
+                else
+                {
+                    checkLogin2.Status = 0;
+                    _context.CheckLogins.Update(checkLogin2);
+                }
+                await _context.SaveChangesAsync();
+
                 return Ok(new { code = 0, msg = "验证成功！", token = new JwtSecurityTokenHandler().WriteToken(jwtToken) });
             }
 
@@ -264,11 +330,21 @@ namespace Store.Api.Controllers
                 return BadRequest();
             }
 
+            User_Role user_Role = new User_Role { RoleId = 2, RoleName = "帮众", UserId = user.Id, UserEmail = user.Phone };
+
+            await _repositoryWrapper.User_RoleRepository.AddAsync(user_Role);
+            await _repositoryWrapper.User_RoleRepository.SaveAsync();
+
+
+            var roleInfo = await _repositoryWrapper.User_RoleRepository.GetUser_RoleByUserIdAsync(user.Id);
+
+
             List<Claim> claimList2 = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Name,user.Id.ToString()),
                 new Claim(JwtClaimTypes.NickName,user.NickName),
-                new Claim(JwtClaimTypes.PhoneNumber,user.Phone )
+                new Claim(JwtClaimTypes.PhoneNumber,user.Phone ),
+                new Claim(JwtClaimTypes.Role, roleInfo.RoleName)
             };
 
             var key2 = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityConfigOptions.Key));
@@ -287,6 +363,25 @@ namespace Store.Api.Controllers
             commonData.Value = commonData.Value + 1;
             _context.CommonDatas.Update(commonData);
             await _context.SaveChangesAsync();
+
+            LogMessage logMessage = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
+            await _context.LogMessages.AddAsync(logMessage);
+            await _context.SaveChangesAsync();
+
+
+            var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == user.Id);
+            if (checkLogin == null)
+            {
+                CheckLogin check = new CheckLogin { UserId = user.Id, Status = 0 };
+                await _context.CheckLogins.AddAsync(check);
+            }
+            else
+            {
+                checkLogin.Status = 0;
+                _context.CheckLogins.Update(checkLogin);
+            }
+            await _context.SaveChangesAsync();
+
             return Ok(new { code = 0, msg = "验证成功！", token = new JwtSecurityTokenHandler().WriteToken(jwtToken2) });
         }
 
