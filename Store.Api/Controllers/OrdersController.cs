@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -86,8 +87,11 @@ namespace Store.Api.Controllers
                 commonData.Value = commonData.Value + order.Count;
                 _context.CommonDatas.Update(commonData);
                 await _context.SaveChangesAsync();
+                LogMessage logMessage = new LogMessage { Content = $" “{User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value}” 购买了：“{buyProduct.Title}”{order.Count}件！", CreateTime = DateTime.Now };
+                await _context.LogMessages.AddAsync(logMessage);
+                await _context.SaveChangesAsync();
             }
-
+     
 
             return Ok();
         }

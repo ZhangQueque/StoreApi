@@ -20,7 +20,7 @@ using Store.Data.Entities;
 namespace Store.Api.Controllers
 {
     /// <summary>
-    /// 用户控制器
+    /// 公共控制器     切记 这里不是专注于用户，更像是一个公共的控制器
     /// </summary>
     [Route("api/users")]
     [ApiController]
@@ -40,6 +40,10 @@ namespace Store.Api.Controllers
             this._context = context;
         }
 
+        /// <summary>
+        /// 网站访问量
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("view")]
         [AllowAnonymous]
         public async Task<IActionResult> ViewAddAsync()
@@ -92,6 +96,10 @@ namespace Store.Api.Controllers
           //  return common;
         }
 
+        /// <summary>
+        /// 注销
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("logout")]
          public async Task<IActionResult> LogOut()
@@ -109,7 +117,9 @@ namespace Store.Api.Controllers
                 _context.CheckLogins.Update(checkLogin);
             }
             await _context.SaveChangesAsync();
-
+            LogMessage logMessage = new LogMessage { Content = $" “{User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value}” 退出了！", CreateTime = DateTime.Now };
+            await _context.LogMessages.AddAsync(logMessage);
+            await _context.SaveChangesAsync();
             return Ok();
         }
     }

@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Store.Data.Entities;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.ComponentModel.DataAnnotations.Schema;
-namespace Store.Data.Entities
+
+namespace Store.Dto
 {
-    /// <summary>
-    /// 用户
-    /// </summary>
-    public class UserInfo
+    public class UserDto
     {
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string NickName { get; set; }
         public string Email { get; set; }
@@ -32,6 +28,7 @@ namespace Store.Data.Entities
         public DateTime UpdateTime { get; set; }
 
         public string ShippingAddress { get; set; }
- 
+
+        public User_Role User_Role { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace Store.Api.AutoMap
 
             CreateMap<UserInfo, User_PhoneLoginDto>();
             CreateMap<User_PhoneLoginDto, UserInfo>();
-        }
+            CreateMap<UserInfo, UserDto>();
+         }
     }
 }

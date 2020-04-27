@@ -152,12 +152,24 @@
         </member>
         <member name="T:Store.Api.Controllers.UsersController">
             <summary>
-            用户控制器
+            公共控制器     切记 这里不是专注于用户，更像是一个公共的控制器
             </summary>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.ViewAddAsync">
+            <summary>
+            网站访问量
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Store.Api.Controllers.UsersController.GetCommonDtoAsync">
             <summary>
             获取公共数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.LogOut">
+            <summary>
+            注销
             </summary>
             <returns></returns>
         </member>
