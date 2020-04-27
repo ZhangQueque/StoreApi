@@ -32,7 +32,7 @@ namespace Store.Api.Controllers
         private readonly IMapper mapper;
         private readonly RedisCacheHelper cacheHelper;
 
-        public ProductsController(IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache, IMapper mapper , RedisCacheHelper cacheHelper)
+        public ProductsController(IRepositoryWrapper repositoryWrapper, IDistributedCache distributedCache, IMapper mapper, RedisCacheHelper cacheHelper)
         {
             this.repositoryWrapper = repositoryWrapper;
             this.distributedCache = distributedCache;
@@ -48,17 +48,17 @@ namespace Store.Api.Controllers
         /// <returns></returns>     
         [HttpGet]
         [ServiceFilter(typeof(IsExistProductAttribute))]
-       
+
         public async Task<ActionResult<PageList<Product>>> GetProductsAsync(int typeId, [FromQuery]PageParameters pageParameters)
         {
-           
+
             PageList<Product> data = new PageList<Product>();
 
             //名称查询缓冲
             if (!string.IsNullOrEmpty(pageParameters.Name))
             {
                 //价格排序缓冲
-                if (pageParameters.IsPriceSort!=null)
+                if (pageParameters.IsPriceSort != null)
                 {
                     byte[] pricebytes = await distributedCache.GetAsync($"Product_Price_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_{pageParameters.IsPriceSort}_Price_{pageParameters.BottomPrice}_{pageParameters.TopPrice}");
                     if (pricebytes == null)
@@ -112,12 +112,12 @@ namespace Store.Api.Controllers
                 byte[] bytes = await distributedCache.GetAsync($"Product_Name_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_Price_{pageParameters.BottomPrice}_{pageParameters.TopPrice}");
                 if (bytes == null)
                 {
-                    data = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, typeId);                 
-                    await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Name_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_Price_{pageParameters.BottomPrice}_{pageParameters.TopPrice}", data); 
+                    data = await repositoryWrapper.ProductRepository.GetPageListsAsync(pageParameters, typeId);
+                    await cacheHelper.SetRedisCacheAsync<PageList<Product>>($"Product_Name_{typeId}_{pageParameters.PageIndex}_{pageParameters.Name}_Price_{pageParameters.BottomPrice}_{pageParameters.TopPrice}", data);
                     return data;
                 }
                 else
-                {                  
+                {
                     data = await cacheHelper.GetRedisCacheAsync<PageList<Product>>(bytes);
                     return data;
                 }
@@ -200,13 +200,19 @@ namespace Store.Api.Controllers
         {
             Product product;
             byte[] bytes = distributedCache.Get($"Product_{id}");
-            if (bytes==null)
+            if (bytes == null)
             {
                 product = await repositoryWrapper.ProductRepository.GetProductById(id);
-                await cacheHelper.SetRedisCacheAsync($"Product_{id}", product);
+                await cacheHelper.SetRedisCacheShortTimeAsync($"Product_{id}", product);
+                product.PageView = product.PageView + 1;
+                await repositoryWrapper.ProductRepository.UpdateAsync(product);
+                await repositoryWrapper.ProductRepository.SaveAsync();
                 return product;
             }
             product = await cacheHelper.GetRedisCacheAsync<Product>(bytes);
+            product.PageView = product.PageView + 1;
+            await repositoryWrapper.ProductRepository.UpdateAsync(product);
+            await repositoryWrapper.ProductRepository.SaveAsync();
             return product;
         }
 
@@ -218,15 +224,15 @@ namespace Store.Api.Controllers
         [HttpGet("new")]
         public async Task<ActionResult<List<Product>>> GetNewProductsAsync()
         {
-            var data =Enumerable.Empty<Product>();
+            var data = Enumerable.Empty<Product>();
             var bytes = await distributedCache.GetAsync("GetNewProductsAsync");
-            if (bytes==null)
+            if (bytes == null)
             {
                 data = await repositoryWrapper.ProductRepository.GetNewProductsAsync();
                 await cacheHelper.SetRedisCacheAsync<List<Product>>("GetNewProductsAsync", data.ToList());
                 return data.ToList();
             }
-            data= await cacheHelper.GetRedisCacheAsync<List<Product>>(bytes);
+            data = await cacheHelper.GetRedisCacheAsync<List<Product>>(bytes);
             return data.ToList();
         }
 
@@ -269,5 +275,5 @@ namespace Store.Api.Controllers
         }
     }
 
-   
+
 }

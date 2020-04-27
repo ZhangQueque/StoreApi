@@ -55,22 +55,22 @@ namespace Store.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrderAsync([FromBody]Order order)
         {
-             
+
             order.CreateTime = DateTime.Now;
-            order.UserId= Convert.ToInt32(User.Identity.Name);
+            order.UserId = Convert.ToInt32(User.Identity.Name);
             var buyProduct = await _repositoryWrapper.ProductRepository.GetByIdAsync(order.ProductId);
-            if (buyProduct==null)
+            if (buyProduct == null)
             {
                 return NotFound("该商品不存在！");
             }
-            if (buyProduct.Stock==0)
+            if (buyProduct.Stock == 0)
             {
                 return NotFound("该商品已下架！");
             }
             buyProduct.Stock = buyProduct.Stock - order.Count;
             buyProduct.Purchase = buyProduct.Purchase + order.Count;
             await _repositoryWrapper.ProductRepository.UpdateAsync(buyProduct);
-            if (!  await _repositoryWrapper.ProductRepository.SaveAsync())
+            if (!await _repositoryWrapper.ProductRepository.SaveAsync())
             {
                 return BadRequest();
             }
@@ -80,14 +80,14 @@ namespace Store.Api.Controllers
             {
                 return BadRequest();
             }
-            if (order.Status==1)
+            if (order.Status == 1)
             {
                 var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "Order");
                 commonData.Value = commonData.Value + order.Count;
                 _context.CommonDatas.Update(commonData);
                 await _context.SaveChangesAsync();
             }
-         
+
 
             return Ok();
         }
@@ -110,7 +110,7 @@ namespace Store.Api.Controllers
             {
                 return NotFound("该商品不存在！");
             }
- 
+
             order.Status = 4;
             await _repositoryWrapper.OrderRepository.UpdateAsync(order);
             if (!await _repositoryWrapper.OrderRepository.SaveAsync())
@@ -126,13 +126,11 @@ namespace Store.Api.Controllers
                 return BadRequest();
             }
 
-            if (order.Status == 1)
-            {
-                var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "Order");
-                commonData.Value = commonData.Value - order.Count;
-                _context.CommonDatas.Update(commonData);
-                await _context.SaveChangesAsync();
-            }
+
+            var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "Order");
+            commonData.Value = commonData.Value - order.Count;
+            _context.CommonDatas.Update(commonData);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

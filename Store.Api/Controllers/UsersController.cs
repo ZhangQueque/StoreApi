@@ -51,7 +51,7 @@ namespace Store.Api.Controllers
 
                 DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
                 {
-                    AbsoluteExpiration = DateTime.Now.AddMinutes(15)
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(10)
                 };
                 var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "View");
                 commonData.Value = commonData.Value + 1;

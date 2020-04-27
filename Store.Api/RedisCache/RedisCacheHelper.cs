@@ -29,6 +29,16 @@ namespace Store.Api.RedisCache
             await distributedCache.SetAsync(key, Encoding.UTF8.GetBytes(json), options);
         }
 
+        public async Task SetRedisCacheShortTimeAsync<T>(string key, T t)
+        {
+            string json = JsonSerializer.Serialize<T>(t);
+            DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddMinutes(5)
+            };
+            await distributedCache.SetAsync(key, Encoding.UTF8.GetBytes(json), options);
+        }
+
         public Task<T> GetRedisCacheAsync<T>(byte[] bytes)
         {
             return Task.FromResult(JsonSerializer.Deserialize<T>(Encoding.UTF8.GetString(bytes)));
