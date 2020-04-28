@@ -105,7 +105,7 @@ namespace Store.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseStaticFiles();
             app.UseCors("cors");
             app.UseSwagger();
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/product/swagger.json", "Product Api"));

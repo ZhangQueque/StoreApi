@@ -21,6 +21,7 @@ namespace Store.Data.Entities
         public int Count { get; set; }
 
         public  decimal TotalPrices  { get; set; }
+        public string Size { get; set; }
 
         public int Status { get; set; }
 

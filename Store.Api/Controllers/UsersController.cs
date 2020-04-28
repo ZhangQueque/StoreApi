@@ -16,6 +16,7 @@ using System.Net;
 using Store.Data;
 using Microsoft.EntityFrameworkCore;
 using Store.Data.Entities;
+using System.IO;
 
 namespace Store.Api.Controllers
 {
@@ -32,7 +33,7 @@ namespace Store.Api.Controllers
         private readonly IDistributedCache distributedCache;
         private readonly StoreDbContext _context;
 
-        public UsersController(IRepositoryWrapper repositoryWrapper, IMapper mapper,IDistributedCache distributedCache,StoreDbContext context)
+        public UsersController(IRepositoryWrapper repositoryWrapper, IMapper mapper, IDistributedCache distributedCache, StoreDbContext context)
         {
             this._repositoryWrapper = repositoryWrapper;
             this._mapper = mapper;
@@ -73,27 +74,27 @@ namespace Store.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<CommonDto>> GetCommonDtoAsync()
         {
-           
+
             int userId = Convert.ToInt32(User.Identity.Name);
 
             CommonDto common = new CommonDto();
-       
-            
+
+
             common.WishCount = (await _repositoryWrapper.WishRepository.GetWishDtosAsync(userId)).Count();
             common.CartCount = (await _repositoryWrapper.CartRepository.GetCartDtosAsync(userId)).Count();
             common.NickName = User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value;
 
 
             var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == userId);
-            if (checkLogin.Status==1)
+            if (checkLogin.Status == 1)
             {
                 return BadRequest();
             }
 
             return common;
-          
-           // common= JsonSerializer.Deserialize<CommonDto>(Encoding.UTF8.GetString(bytes));
-          //  return common;
+
+            // common= JsonSerializer.Deserialize<CommonDto>(Encoding.UTF8.GetString(bytes));
+            //  return common;
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Store.Api.Controllers
         /// <returns></returns>
 
         [HttpGet("logout")]
-         public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> LogOutAsync()
         {
             int userId = Convert.ToInt32(User.Identity.Name);
 
@@ -121,6 +122,69 @@ namespace Store.Api.Controllers
             await _context.LogMessages.AddAsync(logMessage);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UserUpdateAsync([FromForm]UserUpdateDto userUpdateDto)
+        {
+
+
+            int userId = Convert.ToInt32(User.Identity.Name);
+
+            var user = await _repositoryWrapper.UserRepository.GetByIdAsync(userId);
+
+            if (user.Email == userUpdateDto.Email && user.Phone == userUpdateDto.Phone && user.NickName == userUpdateDto.NickName && user.ShippingAddress == userUpdateDto.ShippingAddress && userUpdateDto.Image == null)
+            {
+                return Ok(new { code = 2, msg = "未进行任何更改！" });
+
+            }
+            else
+            {
+                if (user.Email != userUpdateDto.Email)
+                {
+                    if (await _repositoryWrapper.UserRepository.IsExistEmailAccountAsync(userUpdateDto.Email))
+                    {
+                        return Ok(new { code = 1, msg = "该邮箱已存在，请重新输入！" });
+                    }
+                    user.Email = userUpdateDto.Email;
+                }
+                if (user.Phone != userUpdateDto.Phone)
+                {
+                    if (await _repositoryWrapper.UserRepository.IsExistPhoneAccountAsync(userUpdateDto.Phone))
+                    {
+                        return Ok(new { code = 1, msg = "该手机号已存在，请重新输入！" });
+                    }
+                    user.Phone = userUpdateDto.Phone;
+                }
+                if (user.NickName != userUpdateDto.NickName)
+                {
+                    user.NickName = userUpdateDto.NickName;
+                }
+                if (user.ShippingAddress != userUpdateDto.ShippingAddress)
+                {
+                    user.ShippingAddress = userUpdateDto.ShippingAddress;
+                }
+                if (userUpdateDto.Image != null)
+                {
+                    string fileName = Guid.NewGuid().ToString().Replace("-","") + userUpdateDto.Image.FileName;
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserImg", fileName);
+                    using (var stream = System.IO.File.Create(path))
+                    {
+                        await userUpdateDto.Image.CopyToAsync(stream);
+                    }
+                    string imgurl = Request.Scheme + "://" + Request.Host;
+                    user.Image = imgurl + "/UserImg/" + fileName;
+                }
+
+                await _repositoryWrapper.UserRepository.UpdateAsync(user);
+
+                if (!await _repositoryWrapper.UserRepository.SaveAsync())
+                {
+                    return BadRequest();
+                }//https://localhost:5001/
+                return Ok(new { code = 0, msg = "更新成功！" });
+            }
         }
     }
 }

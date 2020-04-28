@@ -138,7 +138,7 @@ namespace Store.Api.Controllers
                    audience: _securityConfigOptions.Audience,
                    claims: claimList,
                    signingCredentials: sig,
-                   expires: DateTime.Now.AddMinutes(120)
+                   expires: DateTime.Now.AddMinutes(220)
                  ) ;
 
             LogMessage logMessage = new LogMessage { Content=$" \"{user.NickName}\" 登陆了！",CreateTime=DateTime.Now};
@@ -211,7 +211,7 @@ namespace Store.Api.Controllers
                    audience: _securityConfigOptions.Audience,
                    claims: claimList,
                    signingCredentials: sig,
-                   expires: DateTime.Now.AddMinutes(120)
+                   expires: DateTime.Now.AddMinutes(220)
                  );
             var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");
             commonData.Value = commonData.Value + 1;
@@ -282,7 +282,7 @@ namespace Store.Api.Controllers
                        audience: _securityConfigOptions.Audience,
                        claims: claimList,
                        signingCredentials: sig,
-                       expires: DateTime.Now.AddMinutes(120)
+                       expires: DateTime.Now.AddMinutes(220)
                      );
 
                 LogMessage logMessage2 = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
@@ -356,7 +356,7 @@ namespace Store.Api.Controllers
                    audience: _securityConfigOptions.Audience,
                    claims: claimList2,
                    signingCredentials: sig2,
-                   expires: DateTime.Now.AddMinutes(120)
+                   expires: DateTime.Now.AddMinutes(220)
                  );
 
             var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");

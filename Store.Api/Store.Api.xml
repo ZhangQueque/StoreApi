@@ -44,6 +44,30 @@
             <param name="email">邮箱</param>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.AdminController.GetUserInfoAsync">
+            <summary>
+            用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.AdminController.GetLogMsgAsync">
+            <summary>
+            消息日志
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.AdminController.GetNumberAsync">
+            <summary>
+            网站计数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.AdminController.GetChartDataAsync">
+            <summary>
+            统计图数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Store.Api.Controllers.CartsController.GetCartsAsync(System.Int32,System.Int32)">
             <summary>
             返回用户对应的购物车
@@ -167,7 +191,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Store.Api.Controllers.UsersController.LogOut">
+        <member name="M:Store.Api.Controllers.UsersController.LogOutAsync">
             <summary>
             注销
             </summary>
