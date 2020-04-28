@@ -82,7 +82,7 @@ namespace Store.Api.Controllers
 
             common.WishCount = (await _repositoryWrapper.WishRepository.GetWishDtosAsync(userId)).Count();
             common.CartCount = (await _repositoryWrapper.CartRepository.GetCartDtosAsync(userId)).Count();
-            common.NickName = User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value;
+            common.NickName =(await _repositoryWrapper.UserRepository.GetByIdAsync(userId)).NickName;
 
 
             var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == userId);
@@ -125,6 +125,11 @@ namespace Store.Api.Controllers
         }
 
 
+        /// <summary>
+        /// 编辑用户信息
+        /// </summary>
+        /// <param name="userUpdateDto">用户修改对象</param>
+        /// <returns></returns>
         [HttpPost("update")]
         public async Task<IActionResult> UserUpdateAsync([FromForm]UserUpdateDto userUpdateDto)
         {
@@ -167,7 +172,8 @@ namespace Store.Api.Controllers
                 }
                 if (userUpdateDto.Image != null)
                 {
-                    string fileName = Guid.NewGuid().ToString().Replace("-","") + userUpdateDto.Image.FileName;
+                    var extensionPath =  Path.GetExtension(userUpdateDto.Image.FileName);
+                    string fileName = userId+"_"+ userId+"_"+ userId + extensionPath;
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserImg", fileName);
                     using (var stream = System.IO.File.Create(path))
                     {

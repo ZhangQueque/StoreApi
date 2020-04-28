@@ -197,6 +197,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.UsersController.UserUpdateAsync(Store.Dto.UserUpdateDto)">
+            <summary>
+            编辑用户信息
+            </summary>
+            <param name="userUpdateDto">用户修改对象</param>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.WishsController">
             <summary>
             商品收藏
