@@ -49,6 +49,21 @@ namespace Store.Api.Controllers
         }
 
         /// <summary>
+        /// 获取全部订单
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("all")]
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetCartsAllAsync()
+        {
+           
+            var data = await _repositoryWrapper.OrderRepository.GetOrdersAllAsync();
+
+            return data.ToList();
+        }
+
+
+        /// <summary>
         /// 新增订单
         /// </summary>
         /// <param name="order">新增对象</param>
@@ -130,7 +145,7 @@ namespace Store.Api.Controllers
         /// <param name="id">订单主键</param>
         /// <returns></returns>
         [HttpGet("status2/{id}")]
-        [Authorize("帮主,副帮主,帮主夫人")]
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
         public async Task<IActionResult> UpdateStatusTo2(int id)
         {
             var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);

@@ -99,6 +99,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.OrdersController.GetCartsAllAsync">
+            <summary>
+            获取全部订单
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Store.Api.Controllers.OrdersController.AddOrderAsync(Store.Data.Entities.Order)">
             <summary>
             新增订单

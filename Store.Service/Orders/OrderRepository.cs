@@ -24,7 +24,7 @@ namespace Store.Service.Orders
 
         public async Task<IEnumerable<OrderDto>> GetOrdersAsync(int userId)
         {
-            var list = context.Set<Order>().Join(context.Set<UserInfo>(), o => o.UserId, u => u.Id, (o, u) => new OrderDto
+            var list = context.Set<Order>().Where(m=>m.UserId== userId).Join(context.Set<UserInfo>(), o => o.UserId, u => u.Id, (o, u) => new OrderDto
             {
                 UserId = o.UserId,
                 Count = o.Count,
@@ -35,6 +35,44 @@ namespace Store.Service.Orders
                 Status = o.Status,
                 ShippingAddress = u.ShippingAddress,
                  Size=o.Size
+
+            }).Join(context.Set<Product>(), o => o.ProductId, p => p.Id, (o, p) => new OrderDto
+            {
+                Title = p.Title,
+                Pictrue = p.Pictrue,
+                Price = p.Price,
+                ShortDescribe = p.ShortDescribe,
+
+
+                Size = o.Size,
+                UserId = o.UserId,
+                Count = o.Count,
+                CreateTime = o.CreateTime,
+                TotalPrices = o.TotalPrices,
+                Id = o.Id,
+                ProductId = o.ProductId,
+                Status = o.Status,
+                ShippingAddress = o.ShippingAddress,
+            });
+            return await list.ToListAsync();
+
+        }
+
+
+
+        public async Task<IEnumerable<OrderDto>> GetOrdersAllAsync()
+        {
+            var list = context.Set<Order>().Join(context.Set<UserInfo>(), o => o.UserId, u => u.Id, (o, u) => new OrderDto
+            {
+                UserId = o.UserId,
+                Count = o.Count,
+                CreateTime = o.CreateTime,
+                TotalPrices = o.TotalPrices,
+                Id = o.Id,
+                ProductId = o.ProductId,
+                Status = o.Status,
+                ShippingAddress = u.ShippingAddress,
+                Size = o.Size
 
             }).Join(context.Set<Product>(), o => o.ProductId, p => p.Id, (o, p) => new OrderDto
             {

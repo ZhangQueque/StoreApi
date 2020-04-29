@@ -18,5 +18,11 @@ namespace Store.Service.Orders
         /// <param name="userId">用户id</param>
         /// <returns></returns>
         Task<IEnumerable<OrderDto>> GetOrdersAsync(int userId);
+
+        /// <summary>
+        /// 获取所有订单
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<OrderDto>> GetOrdersAllAsync();
     }
 }
