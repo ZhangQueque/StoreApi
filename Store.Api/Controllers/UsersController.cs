@@ -102,6 +102,9 @@ namespace Store.Api.Controllers
             if (checkLogin.Status == 1)
             {
                 await distributedCache.RemoveAsync("login_" + userId.ToString());
+                LogMessage logMessage = new LogMessage { Content = $" “{User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value}” 退出了！", CreateTime = DateTime.Now };
+                await _context.LogMessages.AddAsync(logMessage);
+                await _context.SaveChangesAsync();
                 return BadRequest();
             }
 
@@ -172,10 +175,13 @@ namespace Store.Api.Controllers
                 }
                 if (user.Phone != userUpdateDto.Phone)
                 {
-                    if (await _repositoryWrapper.UserRepository.IsExistPhoneAccountAsync(userUpdateDto.Phone))
+                    if (!string.IsNullOrEmpty(userUpdateDto.Phone))
                     {
-                        return Ok(new { code = 1, msg = "该手机号已存在，请重新输入！" });
-                    }
+                        if (await _repositoryWrapper.UserRepository.IsExistPhoneAccountAsync(userUpdateDto.Phone))
+                        {
+                            return Ok(new { code = 1, msg = "该手机号已存在，请重新输入！" });
+                        }
+                    }              
                     user.Phone = userUpdateDto.Phone;
                 }
                 if (user.NickName != userUpdateDto.NickName)
@@ -208,5 +214,57 @@ namespace Store.Api.Controllers
                 return Ok(new { code = 0, msg = "更新成功！" });
             }
         }
+
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="updatePasswordDto">修改密码对象</param>
+        /// <returns></returns>
+        [HttpPost("pwd")]
+        public async Task<IActionResult> UserUpdatePasswordAsync([FromBody]UpdatePasswordDto  updatePasswordDto) 
+        {
+            int userId = Convert.ToInt32(User.Identity.Name);
+
+            var user = await _repositoryWrapper.UserRepository.GetByIdAsync(userId);
+
+            if (user.Password!= updatePasswordDto.OldPassword)
+            {
+                return Ok(new { code=1,msg="原密码不正确！"});
+            }
+
+            user.Password = updatePasswordDto.NewPassword;
+
+            await _repositoryWrapper.UserRepository.UpdateAsync(user);
+            if (!await _repositoryWrapper.UserRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+
+            return Ok(new { code = 0, msg = "密码修改成功！" });
+        }
+
+
+        /// <summary>
+        /// 取消手机绑定
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("updatePhone")]
+        public async Task<IActionResult> UpdatePhone() 
+        {
+            int userId = Convert.ToInt32(User.Identity.Name);
+
+            var user = await _repositoryWrapper.UserRepository.GetByIdAsync(userId);
+            user.Phone = "";
+            await _repositoryWrapper.UserRepository.UpdateAsync(user);
+            if (!await _repositoryWrapper.UserRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok(new { code = 0, msg = "取消绑定成功！" });
+        }
+
+ 
+
     }
 }

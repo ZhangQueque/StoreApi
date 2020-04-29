@@ -91,18 +91,127 @@ namespace Store.Api.Controllers
                 await _context.LogMessages.AddAsync(logMessage);
                 await _context.SaveChangesAsync();
             }
-     
+
 
             return Ok();
         }
 
+
+
         /// <summary>
-        /// 订单取消
+        /// 订单支付 （1代表订单已支付）
         /// </summary>
         /// <param name="id">订单主键</param>
         /// <returns></returns>
-        [HttpGet("delete/{id}")]
-        public async Task<IActionResult> DeleteOrderAsync(int id)
+        [HttpGet("status1/{id}")]
+        public async Task<IActionResult> UpdateStatusTo1(int id)
+        {
+            var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            if (order.Status != 0)  //没有订单记录不能付款
+            {
+                return BadRequest();
+            }
+            order.Status = 1;
+            await _repositoryWrapper.OrderRepository.UpdateAsync(order);
+            if (!await _repositoryWrapper.OrderRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// 订单发货（2代表订单已发货）
+        /// </summary>
+        /// <param name="id">订单主键</param>
+        /// <returns></returns>
+        [HttpGet("status2/{id}")]
+        [Authorize("帮主,副帮主,帮主夫人")]
+        public async Task<IActionResult> UpdateStatusTo2(int id)
+        {
+            var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            if (order.Status != 1) //没有付款不能发货
+            {
+                return BadRequest();
+            }
+            order.Status = 2;
+
+            await _repositoryWrapper.OrderRepository.UpdateAsync(order);
+            if (!await _repositoryWrapper.OrderRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// 确认收货（3代表订单已收货）
+        /// </summary>
+        /// <param name="id">订单主键</param>
+        /// <returns></returns>
+        [HttpGet("status3/{id}")]
+        public async Task<IActionResult> UpdateStatusTo3(int id)
+        {
+            var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            if (order.Status != 2 && order.Status != 5)  //没有发货不能收货 //退货状态取消
+            {
+                return BadRequest();
+            }
+            order.Status = 3;
+            await _repositoryWrapper.OrderRepository.UpdateAsync(order);
+            if (!await _repositoryWrapper.OrderRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// 申请退款（5代表申请退款）
+        /// </summary>
+        /// <param name="id">订单主键</param>
+        /// <returns></returns>
+        [HttpGet("status5/{id}")]
+        public async Task<IActionResult> UpdateStatusTo5(int id)
+        {
+            var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            if (order.Status != 3) //不收货不能退款
+            {
+                return BadRequest();
+            }
+            order.Status = 5;
+
+            await _repositoryWrapper.OrderRepository.UpdateAsync(order);
+            if (!await _repositoryWrapper.OrderRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok("申请退款成功！");
+        }
+
+        /// <summary>
+        /// 订单取消 (4代表订单已取消，交易关闭)
+        /// </summary>
+        /// <param name="id">订单主键</param>
+        /// <returns></returns>
+        [HttpGet("status4/{id}")]
+        public async Task<IActionResult> UpdateStatusTo4(int id)
         {
             var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
             if (order == null)
@@ -114,7 +223,10 @@ namespace Store.Api.Controllers
             {
                 return NotFound("该商品不存在！");
             }
-
+            if (order.Status == 2)  //发货了就不能取消了，只能收货后，或者发货前
+            {
+                return BadRequest();
+            }
             order.Status = 4;
             await _repositoryWrapper.OrderRepository.UpdateAsync(order);
             if (!await _repositoryWrapper.OrderRepository.SaveAsync())
@@ -138,5 +250,32 @@ namespace Store.Api.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// 删除订单记录
+        /// </summary>
+        /// <param name="id">订单主键</param>
+        /// <returns></returns>
+        [HttpGet("delete/{id}")]
+        public async Task<IActionResult> DeleteOrderAsync(int id)
+        {
+            var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            if (order.Status != 4 && order.Status != 3)
+            {
+                return Ok("订单当前状态不支持删除！");
+            }
+
+            await _repositoryWrapper.OrderRepository.DeleteAsync(order);
+            if (!await _repositoryWrapper.OrderRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok("删除成功！");
+        }
+
     }
 }
