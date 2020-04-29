@@ -86,8 +86,22 @@ namespace Store.Api.Controllers
 
 
             var checkLogin = await _context.CheckLogins.FirstOrDefaultAsync(m => m.UserId == userId);
+
+            string cacheLogin = await distributedCache.GetStringAsync("login_" + userId.ToString());
+            if (string.IsNullOrEmpty(cacheLogin))
+            {
+                checkLogin.Status = 1;
+                _context.CheckLogins.Update(checkLogin);
+                await _context.SaveChangesAsync();
+
+                LogMessage logMessage = new LogMessage { Content = $" “{User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value}” 退出了！", CreateTime = DateTime.Now };
+                await _context.LogMessages.AddAsync(logMessage);
+                await _context.SaveChangesAsync();
+                return BadRequest();
+            }
             if (checkLogin.Status == 1)
             {
+                await distributedCache.RemoveAsync("login_" + userId.ToString());
                 return BadRequest();
             }
 
@@ -116,6 +130,8 @@ namespace Store.Api.Controllers
             {
                 checkLogin.Status = 1;
                 _context.CheckLogins.Update(checkLogin);
+                await distributedCache.RemoveAsync("login_"+userId.ToString());
+
             }
             await _context.SaveChangesAsync();
             LogMessage logMessage = new LogMessage { Content = $" “{User.Claims.FirstOrDefault(m => m.Type == JwtClaimTypes.NickName).Value}” 退出了！", CreateTime = DateTime.Now };

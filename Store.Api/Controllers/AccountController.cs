@@ -138,8 +138,13 @@ namespace Store.Api.Controllers
                    audience: _securityConfigOptions.Audience,
                    claims: claimList,
                    signingCredentials: sig,
-                   expires: DateTime.Now.AddMinutes(220)
+                   expires: DateTime.Now.AddHours(3)
                  ) ;
+            DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            await _distributedCache.SetStringAsync("login_" + user.Id.ToString(), "0", options);
 
             LogMessage logMessage = new LogMessage { Content=$" \"{user.NickName}\" 登陆了！",CreateTime=DateTime.Now};
             await _context.LogMessages.AddAsync(logMessage);
@@ -211,13 +216,18 @@ namespace Store.Api.Controllers
                    audience: _securityConfigOptions.Audience,
                    claims: claimList,
                    signingCredentials: sig,
-                   expires: DateTime.Now.AddMinutes(220)
+                   expires: DateTime.Now.AddHours(3)
                  );
             var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");
             commonData.Value = commonData.Value + 1;
             _context.CommonDatas.Update(commonData);
             await _context.SaveChangesAsync();
 
+            DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            await _distributedCache.SetStringAsync("login_" + user.Id.ToString(), "0", options);
 
             LogMessage logMessage = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
             await _context.LogMessages.AddAsync(logMessage);
@@ -282,8 +292,14 @@ namespace Store.Api.Controllers
                        audience: _securityConfigOptions.Audience,
                        claims: claimList,
                        signingCredentials: sig,
-                       expires: DateTime.Now.AddMinutes(220)
+                       expires: DateTime.Now.AddHours(3)
                      );
+
+                DistributedCacheEntryOptions options1 = new DistributedCacheEntryOptions
+                {
+                    SlidingExpiration = TimeSpan.FromHours(1)
+                };
+                await _distributedCache.SetStringAsync("login_" + user.Id.ToString(), "0", options1);
 
                 LogMessage logMessage2 = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
                 await _context.LogMessages.AddAsync(logMessage2);
@@ -356,13 +372,19 @@ namespace Store.Api.Controllers
                    audience: _securityConfigOptions.Audience,
                    claims: claimList2,
                    signingCredentials: sig2,
-                   expires: DateTime.Now.AddMinutes(220)
+                   expires: DateTime.Now.AddHours(3)
                  );
 
             var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");
             commonData.Value = commonData.Value + 1;
             _context.CommonDatas.Update(commonData);
             await _context.SaveChangesAsync();
+
+            DistributedCacheEntryOptions options = new DistributedCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromHours(1)
+            };
+            await _distributedCache.SetStringAsync("login_" + user.Id.ToString(), "0", options);
 
             LogMessage logMessage = new LogMessage { Content = $" \"{user.NickName}\" 登陆了！", CreateTime = DateTime.Now };
             await _context.LogMessages.AddAsync(logMessage);
