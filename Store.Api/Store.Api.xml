@@ -331,6 +331,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.UsersController.GetRolesAsync">
+            <summary>
+            获取全部角色
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Store.Api.Controllers.UsersController.UpdateUserStatus(System.Int32,System.String)">
             <summary>
             更改用户状态
@@ -352,6 +358,15 @@
             强制下线
             </summary>
             <param name="id">用户id</param>
+            <param name="key">密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.UserToRole(System.Int32,System.Int32,System.String)">
+            <summary>
+            分配角色
+            </summary>
+            <param name="userId">用户id</param>
+            <param name="roleId">角色id</param>
             <param name="key">密钥</param>
             <returns></returns>
         </member>

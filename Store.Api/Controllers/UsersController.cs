@@ -283,12 +283,25 @@ namespace Store.Api.Controllers
             return userDto;
         }
 
-      /// <summary>
-      /// 更改用户状态
-      /// </summary>
-      /// <param name="id">用户id</param>
-      /// <param name="key">密钥</param>
-      /// <returns></returns>
+        /// <summary>
+        /// 获取全部角色
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
+        [HttpGet("role/all")]
+        public async Task<ActionResult<List<Role>>> GetRolesAsync()
+        {
+            var roles = await _context.Roles.ToListAsync();
+          
+            return roles;
+        }
+
+        /// <summary>
+        /// 更改用户状态
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <param name="key">密钥</param>
+        /// <returns></returns>
         [Authorize(Roles = "帮主,副帮主,帮主夫人")]
         [HttpGet("status/{id}")]
         public async Task<IActionResult> UpdateUserStatus(int id, string key)
@@ -364,6 +377,64 @@ namespace Store.Api.Controllers
             return Ok(new { code = 0, msg = "强制下线成功！" });
         }
 
+
+        /// <summary>
+        /// 分配角色
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="roleId">角色id</param>
+        /// <param name="key">密钥</param>
+        /// <returns></returns>
+        [HttpGet("userToRole")]
+        public async Task<IActionResult> UserToRole(int userId,int roleId,string key)
+        {
+            if (key != "zhanghaodong138") //这就不写那些复杂的了，（配置文件，在加密解密，偷懒了）
+            {
+                return Ok(new { code = 1, msg = "密钥不正确！" });
+            }
+            var userrole = await _repositoryWrapper.User_RoleRepository.GetUser_RoleByUserIdAsync(userId);
+
+            if (userrole==null)
+            {
+                User_Role user_Role = new User_Role();
+                var user = await _repositoryWrapper.UserRepository.GetByIdAsync(userId);
+                if (user==null)
+                {
+                    return NotFound();
+                }
+                user_Role.UserId = user.Id;
+                user_Role.UserEmail = user.NickName;
+                var role = await _context.Roles.FindAsync(roleId);
+                if (role==null)
+                {
+                    return NotFound();
+                }
+                user_Role.RoleId = role.Id;
+                user_Role.RoleName = role.Name;
+                await _repositoryWrapper.User_RoleRepository.AddAsync(user_Role);
+                await _repositoryWrapper.User_RoleRepository.SaveAsync();
+
+                return Ok(new { code = 0, msg = "角色分配成功！" });
+            }
+
+             var user2 = await _repositoryWrapper.UserRepository.GetByIdAsync(userId);
+            if (user2 == null)
+            {
+                return NotFound();
+            }
+            userrole.UserId = user2.Id;
+            userrole.UserEmail = user2.NickName;
+            var role2 = await _context.Roles.FindAsync(roleId);
+            if (role2 == null)
+            {
+                return NotFound();
+            }
+            userrole.RoleId = role2.Id;
+            userrole.RoleName = role2.Name;
+            await _repositoryWrapper.User_RoleRepository.UpdateAsync(userrole);
+            await _repositoryWrapper.User_RoleRepository.SaveAsync();
+            return Ok(new { code = 0, msg = "角色分配成功！" });
+        }
 
     }
 }
