@@ -34,7 +34,7 @@ namespace Store.Service.Orders
                 ProductId = o.ProductId,
                 Status = o.Status,
                 ShippingAddress = u.ShippingAddress,
-                 Size=o.Size
+                Size=o.Size
 
             }).Join(context.Set<Product>(), o => o.ProductId, p => p.Id, (o, p) => new OrderDto
             {

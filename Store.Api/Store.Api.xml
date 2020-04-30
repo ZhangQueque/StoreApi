@@ -166,6 +166,18 @@
             <param name="id">商品类别id</param>
             <returns></returns>
         </member>
+        <member name="M:Store.Api.Controllers.ProductCategoriesController.GetParentTypesAsync">
+            <summary>
+            获取父类别
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductCategoriesController.GetChildTypesAsync(System.Int32)">
+            <summary>
+            获取子类别
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Store.Api.Controllers.ProductsController">
             <summary>
             商品
@@ -179,11 +191,26 @@
             <param name="pageParameters">查询参数</param>
             <returns></returns>     
         </member>
-        <member name="M:Store.Api.Controllers.ProductsController.GetProductById(System.Int32)">
+        <member name="M:Store.Api.Controllers.ProductsController.GetProductByIdAsync(System.Int32)">
             <summary>
             获取单个商品信息（及时加载）
             </summary>
             <param name="id">商品主键</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.GetProductImagesAsync(System.Int32)">
+            <summary>
+            获取商品下的所有图片
+            </summary>
+            <param name="id">商品主键</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.CreateProductImagesAsync(System.Int32,Store.Dto.Product_ImageDto)">
+            <summary>
+            商品图片添加
+            </summary>
+            <param name="id">商品主键</param>
+            <param name="product_ImageDto">图片对象</param>
             <returns></returns>
         </member>
         <member name="M:Store.Api.Controllers.ProductsController.GetNewProductsAsync">
@@ -202,6 +229,46 @@
             <summary>
             推荐商品
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.CreateProductAsync(Store.Dto.ProductCreateDto)">
+            <summary>
+            商品创建
+            </summary>
+            <param name="productCreateDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.GetProductAllByAdmin(System.Int32,System.Int32,System.String)">
+            <summary>
+            获取全部商品
+            </summary>
+            <param name="index">页索引</param>
+            <param name="size">每页显示个数</param>
+            <param name="name">查询名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.EditProductAsync(System.Int32,Store.Dto.ProductCreateDto)">
+            <summary>
+            商品修改
+            </summary>
+            <param name="id">商品主键</param>
+            <param name="productCreateDto">修改对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.CreateProductBlog(System.Int32,Store.Data.Entities.Product_Describe)">
+            <summary>
+            添加商品博客
+            </summary>k
+            <param name="id">商品主键</param>
+            <param name="product_Describe">博客对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.ProductsController.ProductToStatus1(System.Int32,System.String)">
+            <summary>
+            更改商品状态
+            </summary>
+            <param name="id">商品主键</param>
+            <param name="key">密钥</param>
             <returns></returns>
         </member>
         <member name="T:Store.Api.Controllers.TestController">
@@ -256,6 +323,36 @@
             <summary>
             取消手机绑定
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.GetUsersAsync">
+            <summary>
+            获取全部用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.UpdateUserStatus(System.Int32,System.String)">
+            <summary>
+            更改用户状态
+            </summary>
+            <param name="id">用户id</param>
+            <param name="key">密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.DeleteUser(System.Int32,System.String)">
+            <summary>
+            删除 用户
+            </summary>
+            <param name="id">用户id</param>
+            <param name="key">密钥</param>
+            <returns></returns>
+        </member>
+        <member name="M:Store.Api.Controllers.UsersController.ToUserLogOut(System.Int32,System.String)">
+            <summary>
+            强制下线
+            </summary>
+            <param name="id">用户id</param>
+            <param name="key">密钥</param>
             <returns></returns>
         </member>
         <member name="T:Store.Api.Controllers.WishsController">

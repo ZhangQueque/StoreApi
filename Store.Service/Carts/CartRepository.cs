@@ -37,6 +37,7 @@ namespace Store.Service.Carts
                 //在继续和商品表联查  （wishdto  和 product  联查）
                 ProductId = p.Id,
                 Title = p.Title,
+                
                 Price = p.Price,
                 Pictrue = p.Pictrue,
                 ShortDescribe = p.ShortDescribe,
@@ -45,7 +46,7 @@ namespace Store.Service.Carts
                 UserId = c.UserId,       
                 CreateTime = c.CreateTime,
                 Size = c.Size
-            }).Where(m => m.UserId == userId);
+            }).Where(m => m.UserId == userId );
 
             return await list.ToListAsync();
         }

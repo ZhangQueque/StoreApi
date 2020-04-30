@@ -36,7 +36,7 @@ namespace Store.Api.Controllers
         {
             int userId = Convert.ToInt32(User.Identity.Name);
             var data = await _repositoryWrapper.CartRepository.GetCartDtosAsync(userId);
-            PageList<CartDto> pageList = await PageList<CartDto>.CreatePageList(data.AsQueryable(), index, size);
+            PageList<CartDto> pageList = await PageList<CartDto>.CreatePageList(data.OrderByDescending(m=>m.CreateTime).AsQueryable(), index, size);
             return pageList;
         }
 
@@ -49,14 +49,20 @@ namespace Store.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCartAsync([FromBody]Cart cart)
         {
-            cart.UserId= Convert.ToInt32(User.Identity.Name); 
+            cart.UserId= Convert.ToInt32(User.Identity.Name);
+
+            Product product = await _repositoryWrapper.ProductRepository.GetByIdAsync(cart.ProductId);
+            if (product.Stock<cart.Count)
+            {
+                return Ok(new { code=1,msg="商品库存不够！请重新采购"});
+            }
             cart.CreateTime = DateTime.Now;
             await _repositoryWrapper.CartRepository.AddAsync(cart);
             if (!await _repositoryWrapper.CartRepository.SaveAsync())
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(new { code = 0, msg = "加入购物车成功！" });
         }
 
         /// <summary>

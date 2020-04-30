@@ -96,9 +96,10 @@ namespace Store.Service.Products
 
         public async Task<Product> GetProductById(int id)
         {
-            var product = await  context.Set<Product>().FindAsync(id);
+            var product = await context.Set<Product>().FirstOrDefaultAsync(m => m.Status == 0 && m.Id == id);
             context.Entry<Product>(product).Collection(m => m.Product_Describes).Load();
             context.Entry<Product>(product).Collection(m => m.Product_Images).Load();
+             
             return product;
 
         }

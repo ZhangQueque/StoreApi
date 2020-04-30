@@ -61,7 +61,7 @@ namespace Store.Service.Wishs
                 ProductId = w.ProductId,
                 UserId = u.Id,
                 UserName = u.NickName,
-            }).Join(context.Set<Product>(),w=>w.ProductId,p=>p.Id,(w,p)=> new WishDto 
+            }).Join(context.Set<Product>(), w=>w.ProductId,p=>p.Id,(w,p)=> new WishDto 
             {
                 //在继续和商品表联查  （wishdto  和 product  联查）
                 ProductId = p.Id,

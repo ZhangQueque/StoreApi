@@ -30,5 +30,7 @@ namespace Store.Dto
         public string ShippingAddress { get; set; }
 
         public User_Role User_Role { get; set; }
+
+        public CheckLogin CheckLogin { get; set; }
     }
 }

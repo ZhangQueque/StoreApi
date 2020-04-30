@@ -11,6 +11,7 @@ using ProtoBuf;
 using System.IO;
 using Store.Api.RedisCache;
 using Store.Api.Attributes;
+using Store.Data.Entities;
 
 namespace Store.Api.Controllers
 {
@@ -66,6 +67,29 @@ namespace Store.Api.Controllers
             //}
             data = await cacheHelper.GetRedisCacheAsync<IEnumerable<Product_CategoryDto>>(bytes);
             return data.ToList();
+        }
+
+
+        /// <summary>
+        /// 获取父类别
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("parent")]
+        public async Task<ActionResult<IEnumerable<Product_Category>>> GetParentTypesAsync() 
+        {
+            return (await repositoryWrapper.Product_CategoryRepository.GetAllAsync()).Where(m => m.PId == 0).ToList();
+
+        }
+
+        /// <summary>
+        /// 获取子类别
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("child")]
+        public async Task<ActionResult<IEnumerable<Product_Category>>> GetChildTypesAsync(int pid)
+        {
+            return (await repositoryWrapper.Product_CategoryRepository.GetAllAsync()).Where(m => m.PId == pid).ToList();
+
         }
     }
 }

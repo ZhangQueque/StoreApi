@@ -44,7 +44,7 @@ namespace Store.Api.Controllers
         {
             int userId =Convert.ToInt32( User.Identity.Name);
             var data = await _repositoryWrapper.WishRepository.GetWishDtosAsync(userId);
-            PageList<WishDto> pageList =await PageList<WishDto>.CreatePageList(data.AsQueryable(), index, size);
+            PageList<WishDto> pageList =await PageList<WishDto>.CreatePageList(data.OrderByDescending(m => m.CreateTime).AsQueryable(), index, size);
 
             return pageList;
         }

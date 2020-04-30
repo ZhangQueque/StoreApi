@@ -264,7 +264,106 @@ namespace Store.Api.Controllers
             return Ok(new { code = 0, msg = "取消绑定成功！" });
         }
 
- 
+        /// <summary>
+        /// 获取全部用户信息
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
+        [HttpGet("all")]
+        public async Task<ActionResult<List<UserDto>>> GetUsersAsync()
+        {
+            var user = await _repositoryWrapper.UserRepository.GetAllAsync();
+            var userDto = _mapper.Map<List<UserDto>>(user);
+
+            foreach (var item in userDto)
+            {
+                item.User_Role = await _repositoryWrapper.User_RoleRepository.GetUser_RoleByUserIdAsync(item.Id);
+                item.CheckLogin = await _context.CheckLogins.FirstOrDefaultAsync(m=>m.UserId==item.Id);
+            }
+            return userDto;
+        }
+
+      /// <summary>
+      /// 更改用户状态
+      /// </summary>
+      /// <param name="id">用户id</param>
+      /// <param name="key">密钥</param>
+      /// <returns></returns>
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
+        [HttpGet("status/{id}")]
+        public async Task<IActionResult> UpdateUserStatus(int id, string key)
+        {
+            if (key!= "zhanghaodong138") //这就不写那些复杂的了，（配置文件，在加密解密，偷懒了）
+            {
+                return Ok(new { code=1,msg="密钥不正确！"});
+            }
+            var user = await _repositoryWrapper.UserRepository.GetByIdAsync(id);
+            user.Status = user.Status == 0 ? 1 : 0;
+            await _repositoryWrapper.UserRepository.UpdateAsync(user);
+            if (!await _repositoryWrapper.UserRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok(new { code = 0, msg = "更改状态成功！" });
+        }
+
+
+        /// <summary>
+        /// 删除 用户
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <param name="key">密钥</param>
+        /// <returns></returns>
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
+        [HttpGet("delete/{id}")]   
+        public async Task<IActionResult> DeleteUser(int id, string key)
+        {
+            if (key != "zhanghaodong138") //这就不写那些复杂的了，（配置文件，在加密解密，偷懒了）
+            {
+                return Ok(new { code = 1, msg = "密钥不正确！" });
+            }
+            var user = await _repositoryWrapper.UserRepository.GetByIdAsync(id);
+            if (user==null)
+            {
+                return NotFound();
+            }
+
+            await _repositoryWrapper.UserRepository.DeleteAsync(user);
+            if (!await _repositoryWrapper.UserRepository.SaveAsync())
+            {
+                return BadRequest();
+            }
+            return Ok(new { code = 0, msg = "删除成功！" });
+        }
+
+
+        /// <summary>
+        /// 强制下线
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <param name="key">密钥</param>
+        /// <returns></returns>
+        [Authorize(Roles = "帮主,副帮主,帮主夫人")]
+        [HttpGet("logout/{id}")]
+        public async Task<IActionResult> ToUserLogOut(int id, string key)
+        {
+            if (key != "zhanghaodong138") //这就不写那些复杂的了，（配置文件，在加密解密，偷懒了）
+            {
+                return Ok(new { code = 1, msg = "密钥不正确！" });
+            }
+            var user = await _repositoryWrapper.UserRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var loginUser = await _context.CheckLogins.FirstOrDefaultAsync(m=>m.UserId==user.Id);
+            loginUser.Status = 1;
+               _context.CheckLogins.Update(loginUser);
+            await _context.SaveChangesAsync();
+            
+            return Ok(new { code = 0, msg = "强制下线成功！" });
+        }
+
 
     }
 }

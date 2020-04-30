@@ -47,7 +47,6 @@ namespace Store.Data.Entities
         public int Purchase { get; set; }
 
         public int Product_CategoryId { get; set; }
-        public virtual Product_Category Product_Category { get; set; }
         public virtual ICollection<Product_Image> Product_Images { get; set; }
         public virtual ICollection<Product_Describe> Product_Describes { get; set; }
 

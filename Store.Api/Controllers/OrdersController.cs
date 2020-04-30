@@ -45,7 +45,7 @@ namespace Store.Api.Controllers
             int userId = Convert.ToInt32(User.Identity.Name);
             var data = await _repositoryWrapper.OrderRepository.GetOrdersAsync(userId);
 
-            return data.ToList();
+            return data.OrderByDescending(m => m.CreateTime).ToList();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Store.Api.Controllers
            
             var data = await _repositoryWrapper.OrderRepository.GetOrdersAllAsync();
 
-            return data.ToList();
+            return data.OrderByDescending(m => m.CreateTime).ToList();
         }
 
 
@@ -81,7 +81,11 @@ namespace Store.Api.Controllers
             }
             if (buyProduct.Stock == 0)
             {
-                return NotFound("该商品已下架！");
+                return Ok(new { code=1,msg= "该商品已下架！" });
+            }
+            if (buyProduct.Status == 1)
+            {
+                return Ok(new { code = 1, msg = "该商品已下架！" });
             }
             buyProduct.Stock = buyProduct.Stock - order.Count;
             buyProduct.Purchase = buyProduct.Purchase + order.Count;
@@ -108,7 +112,7 @@ namespace Store.Api.Controllers
             }
 
 
-            return Ok();
+            return Ok(new { code=0,msg="购买成功！"});
         }
 
 
@@ -122,6 +126,20 @@ namespace Store.Api.Controllers
         public async Task<IActionResult> UpdateStatusTo1(int id)
         {
             var order = await _repositoryWrapper.OrderRepository.GetByIdAsync(id);
+
+            var buyProduct = await _repositoryWrapper.ProductRepository.GetByIdAsync(order.ProductId);
+            if (buyProduct == null)
+            {
+                return NotFound("该商品不存在！");
+            }
+            if (buyProduct.Stock == 0)
+            {
+                return Ok(new { code = 1, msg = "该商品已下架！" });
+            }
+            if (buyProduct.Status == 1)
+            {
+                return Ok(new { code = 1, msg = "该商品已下架！" });
+            }
             if (order == null)
             {
                 return NotFound();
@@ -136,7 +154,7 @@ namespace Store.Api.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(new { code = 0, msg = "购买成功！" });
         }
 
         /// <summary>
