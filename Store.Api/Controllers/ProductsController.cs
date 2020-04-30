@@ -249,13 +249,18 @@ namespace Store.Api.Controllers
 
         public async Task<IActionResult> CreateProductImagesAsync(int id,[FromForm]Product_ImageDto product_ImageDto)
         {
-            var count = await _context.Product_Images.CountAsync();
-            if (count>1)
+            if (product_ImageDto.Image1!=null && product_ImageDto.Image2!=null)
             {
                 var images = await _context.Product_Images.Where(m => m.ProductId == id).ToListAsync();
-                 _context.Product_Images.RemoveRange(images.ToArray());
+                _context.Product_Images.RemoveRange(images.ToArray());
                 await _context.SaveChangesAsync();
-
+            }
+            var count = await _context.Product_Images.Where(m=>m.ProductId==id).CountAsync();
+            if (count>1)
+            {
+                var images = await _context.Product_Images.Where(m => m.ProductId == id).OrderBy(m=>m.Id).ToListAsync();
+                 _context.Product_Images.RemoveRange(images.ToArray().FirstOrDefault());
+                await _context.SaveChangesAsync();
             }
             Product_Image product_Image = new Product_Image();
             if (product_ImageDto.Image1 != null)
@@ -274,18 +279,20 @@ namespace Store.Api.Controllers
                 await _context.SaveChangesAsync();
             }
 
+
+
             Product_Image product_Image2 = new Product_Image();
             if (product_ImageDto.Image2 != null)
             {
-                var extensionPath = Path.GetExtension(product_ImageDto.Image2.FileName);
-                string fileName = id + "_" + id + "_" + product_ImageDto.Image2.FileName.Substring(0, 4) + extensionPath;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProductImg", fileName);
-                using (var stream = System.IO.File.Create(path))
+                var extensionPath2 = Path.GetExtension(product_ImageDto.Image2.FileName);
+                string fileName2 = id + "_" + id + "_" + product_ImageDto.Image2.FileName.Substring(0, 4) + extensionPath2;
+                string path2 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProductImg", fileName2);
+                using (var stream = System.IO.File.Create(path2))
                 {
                     await product_ImageDto.Image2.CopyToAsync(stream);
                 }
                 string imgur2 = Request.Scheme + "://" + Request.Host;
-                product_Image2.Image = imgur2 + "/ProductImg/" + fileName;
+                product_Image2.Image = imgur2 + "/ProductImg/" + fileName2;
                 product_Image2.ProductId = id;
 
                 await _context.Product_Images.AddAsync(product_Image2);
