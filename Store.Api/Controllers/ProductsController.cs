@@ -398,7 +398,7 @@ namespace Store.Api.Controllers
             }
 
 
-            return Ok();
+            return Ok(product.Id);
         }
 
         /// <summary>
