@@ -218,6 +218,8 @@ namespace Store.Api.Controllers
                    signingCredentials: sig,
                    expires: DateTime.Now.AddHours(3)
                  );
+
+
             var commonData = await _context.CommonDatas.FirstOrDefaultAsync(m => m.Type == "User");
             commonData.Value = commonData.Value + 1;
             _context.CommonDatas.Update(commonData);

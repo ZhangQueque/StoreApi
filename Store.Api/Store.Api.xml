@@ -11,7 +11,7 @@
         </member>
         <member name="M:Store.Api.Controllers.AccountController.GetCodeAsync(System.String)">
             <summary>
-            获取验证码
+            获取验证码 （该功能请替换成自己的短信实现方式）
             </summary>
             <param name="phone">手机号</param>
             <returns></returns>
@@ -32,14 +32,14 @@
         </member>
         <member name="M:Store.Api.Controllers.AccountController.PhoneLoginAsync(Store.Dto.User_PhoneLoginDto)">
             <summary>
-            手机号登录验证
+            手机号登录验证  请替换成自己的实现方式
             </summary>
             <param name="login">登录对象</param>
             <returns></returns>
         </member>
         <member name="M:Store.Api.Controllers.AccountController.RetrievePasswordAsync(System.String)">
             <summary>
-            找回密码
+            找回密码 请替换成自己的实现方式
             </summary>
             <param name="email">邮箱</param>
             <returns></returns>
