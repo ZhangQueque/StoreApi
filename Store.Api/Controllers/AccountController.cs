@@ -86,7 +86,7 @@ namespace Store.Api.Controllers
                 {
                     Phone = phone,
                     Code = code,
-                    Key = "138345"
+                    Key = "******"
                 };
 
                 var response = await _httpClient.PostAsJsonAsync("/api/service/sms", sendPhoneModel);
@@ -428,7 +428,7 @@ namespace Store.Api.Controllers
                 Title = "重置密码",
                 EmailAddress = email,
                 Content = "缺缺提醒您：请联系管理员，QQ：3393597524！",
-                Key = "138345",
+                Key = "******",
                 Addresser = "缺缺",
                 Recipients = ""
             };
